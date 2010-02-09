@@ -1,6 +1,6 @@
 ## BIA - Bluetooth Internet Adapter
-  wiki:       http://wiki.github.com/teamblue/BIA/
-  issue:      http://github.com/teamblue/BIA/issues/
+    wiki:       http://wiki.github.com/teamblue/BIA/
+    issue:      http://github.com/teamblue/BIA/issues/
 
 ## Description
 
