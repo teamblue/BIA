@@ -1,14 +1,22 @@
 import java.io.*;
 import java.net.*;
 
+/**
+ * Proxy Class (Handles the connection to/from the browser)
+ * @author DJSymBiotiX
+ *
+ */
 public class Proxy extends Thread
 {
-	private Socket httpSocket;
+	private Socket httpSocket; //Socket connected to browser
 	private BufferedReader in;
 	private PrintWriter out;
-	private HTTPObject httpObject;
-	private boolean start = true;
+	private HTTPObject httpObject; //HTTP Object (For HTTP Packet Parsing)
+	private boolean start = true; //Start running the thread (Needed for clean shutdown)
 		
+	/**
+	 * Initiate everything to null
+	 */
 	public Proxy()
 	{
 		httpSocket = null;
@@ -16,6 +24,10 @@ public class Proxy extends Thread
 		out = null;
 	}
 	
+	/**
+	 * New Browser request.
+	 * @param socket: Socket already connected to browser
+	 */
 	public void newRequest(Socket socket)
 	{		
 		try
@@ -32,6 +44,11 @@ public class Proxy extends Thread
 		}
 	}
 	
+	/**
+	 * Remove un-needed blank characters from char array. Return as a string.
+	 * @param buffer
+	 * @return
+	 */
 	private String BufferToString(char[] buffer)
 	{
 		String result = "";
@@ -47,52 +64,49 @@ public class Proxy extends Thread
 		return result;		
 	}
 	
+	/**
+	 * Run the proxy thread
+	 */
 	public void run()
 	{
-		char[] buffer = new char[4086];
-		String strBuf = "";
-		String message = "";
+		char[] buffer = new char[4086]; //Data Buffer
+		String message = ""; //Message String
+		
+		//Continue running until start is false
 		while(start)
 		{
+			//Make sure the httpSocket is not null (this loop may run before it is assigned)
 			if(httpSocket != null)
 			{
+				//Continue processing requests until the socket has been closed.
 				while(httpSocket.isConnected() && httpSocket.isBound())
 				{
 					try
 					{	
-						strBuf = "";
+						//Make sure the input stream is assigned and ready (has data in it)
 						if(in != null && in.ready())
 						{
-							in.read(buffer);
-							
-							/*
-							while(in.ready())
-							{
-								strBuf += in.readLine() + "\n";
-							}
-							*/
+							in.read(buffer); //Read data into buffer						
 												
-							message = BufferToString(buffer);
-							//message = strBuf;
+							message = BufferToString(buffer); //Convert buffer to string
 							
 							System.out.println(message + "\n----\n");									
-							httpObject = new HTTPObject(message);
+							httpObject = new HTTPObject(message); //Create new http Object (for parsing)
 							System.out.println("Host: " + httpObject.getHost());
 							
+							//Create new socket to requested server on port 80
 							Socket internet = new Socket(httpObject.getHost(),80);
-							Connection connection = new Connection(internet);
-							connection.SendRequest(httpObject.getMessage());
+							Connection connection = new Connection(internet); //Create new connection
+							connection.SendRequest(httpObject.getMessage()); //Send http request to requested server
 							
-							buffer = connection.GetResponse();
-							//strBuf = connection.GetResponseStr();
+							buffer = connection.GetResponse(); //Get response from requested server
 							
-							message = BufferToString(buffer);
-							//message = strBuf;
+							message = BufferToString(buffer); //Convert to string
 							
 							System.out.println(message + "\n----\n");
 							
-							out.println(message);
-							connection.CloseConnection();
+							out.println(message); //Send requested server response back to browser
+							connection.CloseConnection(); //Close requested server connection
 						}
 					}
 					catch (IOException ioe)
@@ -102,6 +116,7 @@ public class Proxy extends Thread
 					}
 				}
 				
+				//When the connection is closed (by the browser), safely deallocate (Close all)
 				try
 				{
 					out.close();

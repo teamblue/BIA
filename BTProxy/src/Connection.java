@@ -2,12 +2,21 @@ import java.io.*;
 import java.net.*;
 import java.nio.CharBuffer;
 
+/**
+ * 
+ * @author DJSymBiotiX
+ * The connection class connects to a webserver and send send/receive data to/from it.
+ */
 public class Connection
 {
 	private Socket httpSocket;
 	private BufferedReader in;
 	private PrintWriter out;
 	
+	/**
+	 * Connection Constructor: Takes in an already connected socket and grabs the input/output streams from it.
+	 * @param socket: An already connected socket
+	 */
 	public Connection(Socket socket)
 	{
 		httpSocket = socket;
@@ -25,6 +34,9 @@ public class Connection
 		}
 	}
 	
+	/**
+	 * Closes the Connection
+	 */
 	public void CloseConnection()
 	{
 		try
@@ -40,33 +52,19 @@ public class Connection
 		}
 	}
 	
+	/**
+	 * Send a request through the httpsocket
+	 * @param message: Message to send
+	 */
 	public void SendRequest(String message)
 	{
 		out.println(message);
 	}
 	
-	public String GetResponseStr()
-	{
-		String response = "";
-		
-		try
-		{
-			//while(!in.ready());
-			
-			while(in.ready())
-			{
-				response += in.readLine() + "\n";
-			} 
-		}
-		catch (IOException ioe)
-		{
-			System.err.println("Error: " + ioe.getMessage());
-			ioe.printStackTrace();
-		}
-		return response;
-	
-	}
-	
+	/**
+	 * GetResponse returns the data that is sent from the server to this client program.
+	 * @return char array of data.
+	 */
 	public char[] GetResponse()
 	{
 		char[] buffer = new char[4086];

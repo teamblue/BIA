@@ -5,6 +5,11 @@ enum HTTPType
 	UNKNOWN
 }
 
+/**
+ * Class Stub: Currently used to extract host from http packet. May be Expanded on later
+ * @author DJSymBiotiX
+ *
+ */
 public class HTTPObject
 {
 	private HTTPType _type;
