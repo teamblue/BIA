@@ -61,17 +61,35 @@ public class Connection
 		out.println(message);
 	}
 	
+	public void SendRequest(byte[] message)
+	{
+		//out.println(message);
+		try 
+		{
+			httpSocket.getOutputStream().write(message);
+		} 
+		catch (IOException ioe) 
+		{
+			ioe.printStackTrace();
+		}
+	}
+	
 	/**
 	 * GetResponse returns the data that is sent from the server to this client program.
 	 * @return char array of data.
 	 */
-	public char[] GetResponse()
+	public byte[] GetResponse()
 	{
-		char[] buffer = new char[4086];
+		byte[] buffer = new byte[32768];
+		int amountReadIn = 0;
 
 		try
 		{			
-			in.read(buffer);				
+			//in.read(buffer);
+			while(httpSocket.getInputStream().available() == 0);			
+			
+			amountReadIn = httpSocket.getInputStream().read(buffer);
+			System.out.println("\n--Response Length: " + amountReadIn + "--\n");
 		}
 		catch (IOException ioe)
 		{

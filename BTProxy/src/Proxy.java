@@ -69,8 +69,10 @@ public class Proxy extends Thread
 	 */
 	public void run()
 	{
-		char[] buffer = new char[4086]; //Data Buffer
+		byte[] buffer = new byte[2048];
+		//byte[] bufferCut;
 		String message = ""; //Message String
+		int amountReadIn = 0;
 		
 		//Continue running until start is false
 		while(start)
@@ -83,29 +85,30 @@ public class Proxy extends Thread
 				{
 					try
 					{	
-						//Make sure the input stream is assigned and ready (has data in it)
-						if(in != null && in.ready())
+						if(httpSocket.getInputStream().available() > 0)
 						{
-							in.read(buffer); //Read data into buffer						
-												
-							message = BufferToString(buffer); //Convert buffer to string
+							amountReadIn = httpSocket.getInputStream().read(buffer);
+							//message = BufferToString(buffer); //Convert buffer to string
+							message = new String(buffer);
+							System.out.println(message + "\n--Length: " + amountReadIn + "--\n");									
 							
-							System.out.println(message + "\n----\n");									
 							httpObject = new HTTPObject(message); //Create new http Object (for parsing)
 							System.out.println("Host: " + httpObject.getHost());
 							
 							//Create new socket to requested server on port 80
 							Socket internet = new Socket(httpObject.getHost(),80);
 							Connection connection = new Connection(internet); //Create new connection
-							connection.SendRequest(httpObject.getMessage()); //Send http request to requested server
 							
+							//connection.SendRequest(httpObject.getMessage()); //Send http request to requested server
+							connection.SendRequest(buffer);						
 							buffer = connection.GetResponse(); //Get response from requested server
 							
-							message = BufferToString(buffer); //Convert to string
-							
+							//message = BufferToString(buffer) + "\n"; //Convert to string
+							message = new String(buffer);
 							System.out.println(message + "\n----\n");
 							
-							out.println(message); //Send requested server response back to browser
+							//out.println(buffer); //Send requested server response back to browser
+							httpSocket.getOutputStream().write(buffer);
 							connection.CloseConnection(); //Close requested server connection
 						}
 					}
