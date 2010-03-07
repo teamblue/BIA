@@ -1,0 +1,5 @@
+Basic layout for BIAMobile application:
+
+src --> for any source code for the application itself.
+test --> for any unit tests, etc
+examples --> for any examples or test code that's not unit tests.
