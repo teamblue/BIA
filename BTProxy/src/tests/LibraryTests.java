@@ -5,10 +5,10 @@ import java.net.Socket;
 import junit.framework.TestCase;
 
 /**
- * @author Samuel Pauls
- *
  * Tests the libraries that are used by the Bluetooth internet adapter desktop
  * client.
+ * 
+ * @author Samuel Pauls
  */
 public class LibraryTests extends TestCase {
 	public void testHttpGet() {

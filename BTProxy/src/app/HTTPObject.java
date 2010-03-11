@@ -1,3 +1,4 @@
+package app;
 enum HTTPType
 {
 	GET,
