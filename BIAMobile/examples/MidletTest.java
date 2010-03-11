@@ -21,27 +21,35 @@ public class MidletTest extends MIDlet implements CommandListener
 		mMainForm.addCommand(new Command("Exit", Command.EXIT, 0));
 		mMainForm.setCommandListener(this);
 		
-		String remoteHost = "http://www.google.ca";
+		String[] remoteHosts = {
+				"http://www.google.ca",
+				"http://www.umanitoba.ca"};
 			
-		try
+		for (int i = 0; i < remoteHosts.length; i++)
 		{
-			mMainForm.append("Connecting to " + remoteHost + "...");
-			
-			String response = getViaHttpConnection(remoteHost);
-			mMainForm.append(new StringItem(null, response));
-		}
-		catch (Exception e)
-		{
-			mMainForm.append(e.toString());
+			try
+			{
+				mMainForm.append("\n\nConnecting to " + remoteHosts[i] + "...");
+				String response = getViaHttpConnection(remoteHosts[i]);
+				mMainForm.append(new StringItem(null, response));
+			}
+			catch (Exception e)
+			{
+				mMainForm.append(e.toString());
+			}
 		}
 	}
 
-	// get information from an http connection
-	// taken from
-	// http://java.sun.com/javame/reference/apis/jsr118/javax/microedition/io/HttpConnection.html
+	/**
+	 * Opens up and gets information from an http connection
+	 * taken from http://java.sun.com/javame/reference/apis/jsr118/javax/microedition/io/HttpConnection.html
+	 * 
+	 * @param url  The url to connect to, ex "http://www.google.ca"
+	 * @param host  The host part to place in the header, ex "www.google.ca"
+	 */
 	private String getViaHttpConnection(String url) throws IOException
 	{
-		String response = "";
+		StringBuffer response = new StringBuffer();
 
 		HttpConnection c = null;
 		InputStream is = null;
@@ -52,10 +60,8 @@ public class MidletTest extends MIDlet implements CommandListener
 			c = (HttpConnection) Connector.open(url);
 			
 			/***** Sets headers ******/
-            c.setRequestProperty("User-Agent",
-            "Profile/MIDP-2.0 Configuration/CLDC-1.0");
-            
-            c.setRequestProperty("Content-Language", "en-US");
+            //c.setRequestProperty("Host","hostname");
+            //c.setRequestProperty("User-Agent","Profile/MIDP-2.0 Configuration/CLDC-1.0");
 
 			/*****************************/
 			/** Request is sent here **/
@@ -70,37 +76,18 @@ public class MidletTest extends MIDlet implements CommandListener
 			}
 
 			is = c.openInputStream();
-
-			// Get the ContentType
-			String type = c.getType();
-
-			// Get the length and process the data
-			int len = (int) c.getLength();
 			
-			mMainForm.append("Response length: " + len);
-			
-			if (len > 0)
+			int ch;
+			int bytesRead = 0;
+			while ((ch = is.read()) != -1)
 			{
-				int actual = 0;
-				int bytesread = 0;
-				byte[] data = new byte[len];
+				response.append((char)ch);
+				bytesRead++;
 				
-				// reads response into byte array
-				while ((bytesread != len) && (actual != -1))
+				// only reads 1st 100 bytes, so as to not fill up screen with lots of data
+				if (bytesRead > 100)
 				{
-					actual = is.read(data, bytesread, len - bytesread);
-					bytesread += actual;
-				}
-				
-				response = new String(data);
-				
-			}
-			else
-			{
-				int ch;
-				while ((ch = is.read()) != -1)
-				{
-					//
+					break;
 				}
 			}
 		}
@@ -120,7 +107,7 @@ public class MidletTest extends MIDlet implements CommandListener
 			}
 		}
 
-		return response;
+		return response.toString();
 	}
 
 	public void startApp()
