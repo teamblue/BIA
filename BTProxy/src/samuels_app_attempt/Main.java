@@ -3,6 +3,12 @@ package samuels_app_attempt;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+* Provides proxies to browsers.
+* 
+* @author Samuel Pauls
+*/
+
 public class Main {
 	public static void main(String[] args) {
 		try {
