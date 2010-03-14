@@ -1,8 +1,12 @@
 package testServer;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -45,17 +49,20 @@ public class TestServer
 		return response;
 	}
 	
-	private static String readRequest(InputStream is) throws IOException
+	private static String readRequest(BufferedReader br) throws IOException
 	{
-		int data;
-		StringBuffer request = new StringBuffer();
+		String request = new String();
+		String line;
 		
-		while ((data = is.read()) != -1)
+		line = br.readLine();
+		while (line != null && !line.isEmpty()) // if line is empty, then we hit the second \r\n
 		{
-			request.append((char)data);
+			request += line + getHTTPNewline();
+			
+			line = br.readLine();
 		}
 		
-		return request.toString();
+		return request;
 	}
 	
 	public static void main(String[] args)
@@ -70,12 +77,31 @@ public class TestServer
 			System.out.println("Server running on " + server.getInetAddress() + ":" + server.getLocalPort());
 			
 			Socket clientSocket = server.accept(); // waits for connection
+			
 			InputStream is = clientSocket.getInputStream();
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			
 			OutputStream os = clientSocket.getOutputStream();
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
 			
-			request = readRequest(is);
+			request = readRequest(br);
+			System.out.println("Request:");
 			System.out.println(request);
+			System.out.println();
 			
+			// if we got correct request
+			if (getRequestMessage().equals(request))
+			{
+				// send response
+				bw.write(getExpectedResponse());
+			}
+			else
+			{
+				bw.write("error");
+				bw.write(getHTTPNewline() + getHTTPNewline());
+			}
+			
+			bw.close();
 			server.close();
 		} 
 		catch (IOException e)
