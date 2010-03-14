@@ -21,32 +21,22 @@ public class TestServer
 {	
 	private static String getHTTPNewline()
 	{
-		return "\r\n";
+		return MobileTestConstants.getHTTPNewline();
 	}
 	
 	private static int getServerPort()
 	{
-		return 8741;
+		return MobileTestConstants.getServerPort();
 	}
 	
 	public static String getRequestMessage()
 	{
-		String message =
-			"GET / HTTP/1.1" + getHTTPNewline() +
-			"Host: localhost" + getHTTPNewline() +
-			getHTTPNewline();
-		
-		return message;
+		return MobileTestConstants.getRequestMessage();
 	}
 	
 	public static String getExpectedResponse()
 	{
-		String response =
-			getHTTPNewline() +
-			"HTTP/1.1 200 OK" + getHTTPNewline() +
-			getHTTPNewline();
-		
-		return response;
+		return MobileTestConstants.getExpectedResponse();
 	}
 	
 	private static String readRequest(BufferedReader br) throws IOException
