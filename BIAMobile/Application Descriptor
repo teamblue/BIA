@@ -1,7 +1,8 @@
-MIDlet-Version: 1.0.0
-MIDlet-Vendor: MIDlet Suite Vendor
-MIDlet-Jar-URL: BIAMobile.jar
-MicroEdition-Configuration: CLDC-1.0
 MIDlet-1: BIAMain,,biamobile.BIAMain
-MicroEdition-Profile: MIDP-1.0
+MIDlet-2: TCPTest,,TCPTest
+MIDlet-Jar-URL: BIAMobile.jar
 MIDlet-Name: BIAMobile MIDlet Suite
+MIDlet-Vendor: MIDlet Suite Vendor
+MIDlet-Version: 1.0.0
+MicroEdition-Configuration: CLDC-1.0
+MicroEdition-Profile: MIDP-1.0
