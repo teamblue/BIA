@@ -110,5 +110,37 @@ public class MobileDesktopHandler implements DiscoveryListener{
             desktopURL = servRecord[0].getConnectionURL(0,false);
 	}
 	
+	/**
+	 * Sends the passed byte array as a request.  Blocks until we get a response, returning it as a byte array.
+	 * @param request  The request to send.
+	 * @return  A byte array containing the response.
+	 */
+	public byte[] sendRequest(byte[] request)
+	{
+		// extract remote host from headers in request
+		String remoteHost = extractRemoteHost(request);
+		byte[] response = null;
+		
+		
+		
+		
+		return response;
+	}
+	
+	private String extractRemoteHost(byte[] request)
+	{
+		String remoteHost = null;
+		
+		// gets first line
+		StringBuffer firstLine = new StringBuffer();
+		for (int i = 0; i < request.length && request[i] != '\n'; i++)
+		{
+			firstLine.append(request[i]);
+		}
+		
+		
+		
+		return remoteHost;
+	}
 	
 }

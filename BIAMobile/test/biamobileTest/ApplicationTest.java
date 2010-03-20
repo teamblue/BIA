@@ -11,6 +11,9 @@ import javax.microedition.lcdui.StringItem;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
+import biamobile.MobileDesktopHandler;
+import biamobile.RemoteConnectionHandler;
+
 /**
  * Tests out the full mobile application by attempting to send a request to the application, and waits for
  *  the expected responses.
@@ -23,9 +26,24 @@ public class ApplicationTest extends MIDlet implements CommandListener
 {
 	private Form mMainForm;
 	
-	private static void testRequestResponse()
+	private void testRequestResponse()
 	{
+		MobileDesktopHandler mdh = new MobileDesktopHandler();
 		
+		byte[] response;
+		
+		response = mdh.sendRequest(MobileTestConstants.getRequestMessage().getBytes());
+		
+		String responseStr = new String(response);
+		
+		if (responseStr.equals(MobileTestConstants.getRequestMessage()))
+		{
+			mMainForm.append("Passed...");
+		}
+		else
+		{
+			mMainForm.append("Failed...");
+		}
 		
 	}
 

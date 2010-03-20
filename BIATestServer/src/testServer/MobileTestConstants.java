@@ -15,7 +15,7 @@ public class MobileTestConstants
 	public static String getRequestMessage()
 	{
 		String message =
-			"GET / HTTP/1.1" + getHTTPNewline() +
+			"GET http://localhost/ HTTP/1.0" + getHTTPNewline() +
 			"Host: localhost" + getHTTPNewline() +
 			getHTTPNewline();
 		
@@ -26,7 +26,7 @@ public class MobileTestConstants
 	{
 		String response =
 			getHTTPNewline() +
-			"HTTP/1.1 200 OK" + getHTTPNewline() +
+			"HTTP/1.0 200 OK" + getHTTPNewline() +
 			getHTTPNewline();
 		
 		return response;
