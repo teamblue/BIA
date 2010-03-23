@@ -1,8 +1,10 @@
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
+import javax.microedition.io.HttpsConnection;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
@@ -10,6 +12,8 @@ import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.StringItem;
 import javax.microedition.midlet.MIDlet;
+
+import biamobileTest.MobileTestConstants;
 
 public class MidletTest extends MIDlet implements CommandListener
 {
@@ -21,9 +25,12 @@ public class MidletTest extends MIDlet implements CommandListener
 		mMainForm.addCommand(new Command("Exit", Command.EXIT, 0));
 		mMainForm.setCommandListener(this);
 		
+		
 		String[] remoteHosts = {
-				"http://www.google.ca",
-				"http://www.umanitoba.ca"};
+				"http://localhost"};
+//		String[] remoteHosts = {
+//				"http://www.google.ca",
+//				"http://www.umanitoba.ca"};
 			
 		for (int i = 0; i < remoteHosts.length; i++)
 		{
@@ -69,11 +76,15 @@ public class MidletTest extends MIDlet implements CommandListener
 			// Getting the response code will open the connection,
 			// send the request, and read the HTTP response headers.
 			// The headers are stored until requested.
-			rc = c.getResponseCode();
-			if (rc != HttpConnection.HTTP_OK)
-			{
-				throw new IOException("HTTP response code: " + rc);
-			}
+			//rc = c.getResponseCode();
+//			if (rc != HttpConnection.HTTP_OK)
+//			{
+//				throw new IOException("HTTP response code: " + rc);
+//			}
+			OutputStream os = c.openOutputStream();
+			os.flush();
+			
+			//System.out.println(c.getFile());
 
 			is = c.openInputStream();
 			
