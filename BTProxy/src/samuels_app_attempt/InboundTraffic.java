@@ -16,10 +16,15 @@ import java.net.Socket;
 public class InboundTraffic extends Thread {
 	private Socket browserSession;
 	private InputStream serverIS;
+	private boolean isClosed = false;
 	
 	public InboundTraffic(Socket browserSession, InputStream serverIS) {
 		this.browserSession = browserSession;
 		this.serverIS = serverIS;
+	}
+	
+	public boolean isClosed() {
+		return isClosed;
 	}
 	
 	public void run() {
@@ -27,14 +32,18 @@ public class InboundTraffic extends Thread {
 			OutputStream browserOS = browserSession.getOutputStream();
 			
 			byte[] buffer = new byte[1024];
-			while(true) {
-				if (serverIS.available() > 0) {
-					int bufferLength = serverIS.read(buffer);
-					browserOS.write(buffer, 0, bufferLength);
-				} else {
-					yield();
-				}
+			int bufferLength;
+			final int CONNECTION_CLOSED = -1;
+			// serverIS.read waits until there's something to read or the
+			// connection is closed.  Other methods of checking if a connection
+			// is closed only work once you attempt to read data from the closed
+			// connection.
+			while((bufferLength = serverIS.read(buffer)) != CONNECTION_CLOSED) {
+				browserOS.write(buffer, 0, bufferLength);
 			}
+
+			isClosed = true;
+			System.out.println ("Inbound connection closed!");
 		} catch(Exception e) {
 			System.out.println ("Inbound: " + e);
 		}
