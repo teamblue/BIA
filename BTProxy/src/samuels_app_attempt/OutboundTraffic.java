@@ -36,7 +36,12 @@ public class OutboundTraffic extends Thread {
 			// is closed.  Other methods of checking if a connection is closed
 			// only work once you attempt to read data from the closed
 			// connection.
-			while ((bufferLength = is.read(buffer)) != CONNECTION_CLOSED) {					
+			while ((bufferLength = is.read(buffer)) != CONNECTION_CLOSED) {
+				// TODO: Perhaps the amount of input read in won't be enough to
+				// extract the full HTTP header.  In that case we should really
+				// make sure that we're reading in enough input before
+				// extracting the header... but we still need to check if the
+				// connection is closed at any time.
 				String message = new String(buffer);
 				String host = new HTTPObject(message).getHost();
 				
@@ -54,6 +59,14 @@ public class OutboundTraffic extends Thread {
 					}
 				}
 				
+				// TODO: This block doesn't seem to get used, even though I
+				// thought it would.  Do we really not need to check if a
+				// socket, which can establish multiple outgoing connections
+				// to different servers, has the necessary input stream to
+				// receive data back from a given server?  Wouldn't problems
+				// be caused if that input stream that returns information to
+				// us is closed when the socket needs to send data to that
+				// server again?
 				if (existingServerSession != null &&
 				    existingServerSession.isClosed()) {
 					JOptionPane.showMessageDialog(null, "Found closed connection!");
