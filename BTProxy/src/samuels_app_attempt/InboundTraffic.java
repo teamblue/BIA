@@ -40,12 +40,15 @@ public class InboundTraffic extends Thread {
 			// connection.
 			while((bufferLength = serverIS.read(buffer)) != CONNECTION_CLOSED) {
 				browserOS.write(buffer, 0, bufferLength);
+				Main.addBytesIn(bufferLength);
 			}
 
 			isClosed = true;
 			System.out.println ("Inbound connection closed!");
+			Main.addEvent("Inbound connection closed");
 		} catch(Exception e) {
 			System.out.println ("Inbound: " + e);
+			Main.addEvent("Inbound Exception: " + e);
 		}
 	}
 }
