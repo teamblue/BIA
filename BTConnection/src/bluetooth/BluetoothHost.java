@@ -21,10 +21,14 @@ public class BluetoothHost
 	
 	public static int MAX_BYTES = 100;
 	
-	public BluetoothHost() throws BluetoothStateException
+	private BluetoothRequest btRequest;
+	
+	public BluetoothHost( BluetoothRequest btRequest ) throws BluetoothStateException
 	{
 		localDevice = LocalDevice.getLocalDevice();
 		localDevice.setDiscoverable(DiscoveryAgent.GIAC);
+		
+		this.btRequest = btRequest;
 		
 		System.out.println( "BluetoothHost created at addess " + localDevice.getBluetoothAddress() );
 	}
@@ -68,20 +72,27 @@ public class BluetoothHost
 			{
 				// prepare to send/receive data
 				byte buffer[] = new byte[100];
+				byte response[];
 				
 				InputStream is = connection.openInputStream();
-				int readBytes = is.read(buffer);
+				int readBytes = is.read( buffer );
 				
-				String result = sites.get(new String(buffer, 0, readBytes));
-				if(result == null){
+				response = btRequest.dataRequested( buffer, readBytes );
+				
+				/*
+				String result = sites.get( new String( buffer, 0, readBytes ) );
+				if ( result == null )
+				{
 					result = "Not found!";
 				}
+				*/
 				
 				OutputStream os = connection.openOutputStream();
-				os.write(result.getBytes());
+				os.write( response );
 				os.flush();
+				os.close();
 	
-				//connection.close();
+				connection.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

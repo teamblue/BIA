@@ -1,5 +1,18 @@
 package test;
 
+//To test bluetooth:
+//Expand 'Referenced Libraries'
+//Expand 'bluecove-emu-2.1.0.jar'
+//Expand 'com.intel.bluetooth.emu'
+//Run 'EmuServer.class' as a Java Application
+//
+//Once configured, run TestServer.java as a Java Application
+//Once configured, run TestClient.java as a Java Application
+
+// To run the client:
+// Go to 'Run As' > 'Run Configurations...'
+// Setup a new Java Application and under 'Arguments' add '-Dbluecove.stack=emulator' to 'VM arguments'
+
 import java.io.IOException;
 import java.util.Collection;
 
@@ -61,8 +74,8 @@ public class TestClient {
 			}
 			
 			if ( device.isConnected() )
-			{
-			*/
+			{*/
+			
 				String requests[] = {"umanitoba.ca", "google.com"};
 				
 				for ( String request : requests )
