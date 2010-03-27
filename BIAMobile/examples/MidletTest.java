@@ -4,7 +4,6 @@ import java.io.OutputStream;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
-import javax.microedition.io.HttpsConnection;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
@@ -12,8 +11,6 @@ import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.StringItem;
 import javax.microedition.midlet.MIDlet;
-
-import biamobileTest.MobileTestConstants;
 
 public class MidletTest extends MIDlet implements CommandListener
 {

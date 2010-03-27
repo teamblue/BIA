@@ -1,18 +1,13 @@
 package biamobileTest;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Form;
-import javax.microedition.lcdui.StringItem;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
 import biamobile.MobileDesktopHandler;
-import biamobile.RemoteConnectionHandler;
 
 /**
  * Tests out the full mobile application by attempting to send a request to the application, and waits for
@@ -32,11 +27,11 @@ public class ApplicationTest extends MIDlet implements CommandListener
 		
 		byte[] response;
 		
-		response = mdh.sendRequest(MobileTestConstants.getRequestMessage().getBytes());
+		response = mdh.sendRequest(MobileTestConstants.getTCPRequestMessage().getBytes());
 		
 		String responseStr = new String(response);
 		
-		if (responseStr.equals(MobileTestConstants.getRequestMessage()))
+		if (responseStr.equals(MobileTestConstants.getTCPRequestMessage()))
 		{
 			mMainForm.append("Passed...");
 		}
@@ -67,7 +62,7 @@ public class ApplicationTest extends MIDlet implements CommandListener
 		
 		testRequestResponse();
 	}
-	
+
 	public void commandAction(Command c, Displayable s)
 	{
 		notifyDestroyed();

@@ -3,8 +3,11 @@ package biamobile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 import javax.microedition.io.Connector;
+import javax.microedition.io.HttpConnection;
 import javax.microedition.io.SocketConnection;
 
 public class RemoteConnectionHandler
@@ -19,6 +22,7 @@ public class RemoteConnectionHandler
 	 */
 	public byte[] performConnectTCP(String hostname, int port, byte[] request) throws IOException
 	{
+		byte[] response = null;
 		//open raw TCP connection
 		SocketConnection client = (SocketConnection) Connector.open("socket://" + hostname + ":" + port);
 		//grab the streams
@@ -26,12 +30,44 @@ public class RemoteConnectionHandler
 		OutputStream os = client.openOutputStream();
 		
 		//send the request
-		//System.out.println("Connected. Sending request...");
 		os.write(request);
 		os.flush();
 		
-		//parse the response using a StringBuffer (it's ugly, but it works...)
-		//System.out.println("Recieving response...");
+		String respStr = getResponseFromInputStream(is);
+		client.close();
+		
+		return respStr.getBytes();
+	}
+	
+	public byte[] performConnectHTTP(String method, Hashtable headerHash, String hostname, int port, byte[] request) throws IOException
+	{
+		HttpConnection client = (HttpConnection) Connector.open("http://" + hostname + ":" + port);
+		client.setRequestMethod(method);
+		
+		Enumeration keyEnum = headerHash.keys();
+		String curHeader;
+		String curValue;
+		
+		while (keyEnum.hasMoreElements())
+		{
+			curHeader = (String) keyEnum.nextElement();
+			curValue = (String) headerHash.get(curHeader);
+			
+			client.setRequestProperty(curHeader, curValue);
+		}
+		
+		//opening the input stream has the side effect of causing the request to be sent
+		InputStream is = client.openInputStream();
+		
+		String respStr = getResponseFromInputStream(is);
+		client.close();
+		
+		return respStr.getBytes();
+	}
+	
+	private String getResponseFromInputStream(InputStream is) throws IOException
+	{
+		//parse the response using a StringBuffer
 		StringBuffer responseStr = new StringBuffer("");
 		
 		int c = is.read();
@@ -41,18 +77,6 @@ public class RemoteConnectionHandler
 			c = is.read();
 		}
 		
-		//System.out.println(responseStr.toString());
-		
-		//close
-		//System.out.println("Closing connection...");
-		client.close();
-		//System.out.println("Connection closed.");
-		
-		return responseStr.toString().getBytes();
-	}
-	
-	public void performConnectHTTP(String[][] headers, String hostname, byte[] request)
-	{
-		
+		return responseStr.toString();
 	}
 }
