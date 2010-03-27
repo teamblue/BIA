@@ -98,7 +98,7 @@ public class Status {
 		catch (org.eclipse.swt.SWTException e) {
 			System.out.println(e.getMessage());
 		}
-	
+		
 		shell.pack();
         centreWindow();
        
@@ -248,7 +248,9 @@ public class Status {
 		
 		//lblCostTotalNum start
 		lblCostTotalNum = new Label(cmpCost, SWT.NONE);
-		//lblCostTotalNum end		
+		//lblCostTotalNum end	
+		
+		updateCost();		
 	}	
 	
 	private void addListeners() {
@@ -273,22 +275,26 @@ public class Status {
 		txtCostPerKB.addModifyListener(
 				new ModifyListener() {
 					public void modifyText(ModifyEvent e) {
-						float cost;
-						try {
-							cost = (bytesTotal/1024) * Float.parseFloat(txtCostPerKB.getText());
-							cost = (float) (Math.round(cost * 1000.0) / 1000.0);
-							lblCostTotalNum.setText("" + cost);
-						}
-						catch(Exception ex) {
-							lblCostTotalNum.setText("N/A");
-						}
-						lblCostTotalNum.pack();
+						updateCost();
 					}
 				}
 		 );		
 		
 	}
  
+	private void updateCost() {
+		float cost;
+		try {
+			cost = (float) ((bytesTotal/1024.0) * Float.parseFloat(txtCostPerKB.getText()));
+			cost = (float) (Math.round(cost * 1000.0) / 1000.0);
+			lblCostTotalNum.setText("" + cost);
+		}
+		catch(Exception ex) {
+			lblCostTotalNum.setText("N/A");
+		}
+		lblCostTotalNum.pack();
+	}
+	
 	private void changeUnits(String newUnit) {
 		int denominator;
 		
