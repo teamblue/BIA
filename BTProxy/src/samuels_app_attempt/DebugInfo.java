@@ -43,10 +43,10 @@ public class DebugInfo {
 	}
 	
 	public static void addToList(String text, int maxCount) {
-		System.out.println(maxCount);
-		
+
 		if (lstList.getItemCount() == maxCount)
 			lstList.remove(0);
+		
 	   	lstList.add(text);
 	}
 	

@@ -48,8 +48,8 @@ public class Status {
 
 	private Text txtCostPerKB;
 	
-	private long bytesIn;
-	private long bytesOut;
+	private long bytesIn = 0;
+	private long bytesOut = 0;
 	private long bytesTotal;
 	
 	private final Font SUBTITLE = new Font(display, "Arial", 9, SWT.BOLD);
@@ -57,14 +57,15 @@ public class Status {
 	public Status(long bytesIn, long bytesOut) {
         display = Display.getDefault();
         shell = new Shell(display);
-        
-        this.bytesIn = bytesIn;
-        this.bytesOut = bytesOut;
-        this.bytesTotal = bytesIn + bytesOut;
+
+    	this.bytesIn = bytesIn;
+    	this.bytesOut = bytesOut;
+    	this.bytesTotal = bytesIn + bytesOut;
         
 		createWindow();
 		runWindow();
 	}
+	
 	
     private void runWindow() {
     	shell.open();
@@ -332,7 +333,7 @@ public class Status {
 			Main.costPerKB = Float.parseFloat(txtCostPerKB.getText());
 		}
 		catch(Exception ex) {}
-		
+
 		shell.dispose();
 	}
 }

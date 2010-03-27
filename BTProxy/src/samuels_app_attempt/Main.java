@@ -1,13 +1,5 @@
 package samuels_app_attempt;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.Image;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
-import java.awt.SystemTray;
-import java.awt.Toolkit;
-import java.awt.TrayIcon;
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,7 +8,16 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Tray;
+import org.eclipse.swt.widgets.TrayItem;
 
 
 /**
@@ -30,7 +31,6 @@ public class Main {
 	
 	private static String[] events = new String[EVENTS_SIZE];
 	private static int numEvents = 0;
-	
 	private static long totalBytesIn = 0;
 	private static long totalBytesOut = 0;
 	
@@ -54,11 +54,20 @@ public class Main {
 	}
 	
 	public static void main(String[] args) {
+		
+		   new Thread(new Runnable() {
+			      public void run() {
+			  		try {
+						setupTrayIcon();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+			      }
+		   }).start();
+
+		addEvent("Program started");
+		
 		try {
-			addEvent("Program started");
-			
-			setupTrayIcon();
-			
 			ServerSocket browser = new ServerSocket(3128);
 			
 			// Provide a socket for each proxy request from the browser.
@@ -71,8 +80,8 @@ public class Main {
 				OutboundTraffic outboundTraffic = new OutboundTraffic(browserSession);
 				outboundTraffic.start();
 			}
-		} catch(Exception e) {
-		}
+		} catch(Exception e) {}
+		
 	}
 	
 	private static void addEventToArray(String text) {
@@ -108,13 +117,11 @@ public class Main {
         text = strDate + "   " + event;
 
         //lstList is not initialised (i.e. Debug window is closed) so just update the events array
-        if (DebugInfo.isListNull())
-        {
+        if (DebugInfo.isListNull()) {
         	addEventToArray(text);
         }
         //debug window is open so let's update the debug window's list box and the events array
-        else
-		{
+        else {
 			//Java's GUI frameworks are not thread safe. This prevents an invalid thread access exception due
         	//to attempting to access a widget from a different thread that created it.
         	new Thread(new Runnable() {
@@ -134,59 +141,68 @@ public class Main {
 	}
 	
 	public static void setupTrayIcon() throws Exception {
-		// Setup a system tray icon.
-		if (SystemTray.isSupported()) {
-			// Get the icon graphic.
-			final String ICON_FILENAME = "icon.png";
-			Image image = Toolkit.getDefaultToolkit().getImage(ICON_FILENAME);
+		final String ICON_FILENAME = "icon.png";
+		final String ICON_TEXT = "Bluetooth Internet Adapter";
+		
+		final Display display = new Display ();
+		final Shell shell = new Shell (display);
+		final Image image = new Image (display, ICON_FILENAME);
+		
+		final Tray tray = display.getSystemTray ();
+		if (tray != null) {
+			final TrayItem item = new TrayItem (tray, SWT.NONE);
+			item.setToolTipText(ICON_TEXT);
+
 			
-			// Create a popup menu.
-			PopupMenu menu = new PopupMenu();
-			MenuItem statusItem = new MenuItem("Status");
-			MenuItem debugItem = new MenuItem("Debug");
-			MenuItem lineItem = new MenuItem("-");
-			MenuItem exitItem = new MenuItem("Exit");
+			final Menu menu = new Menu (shell, SWT.POP_UP);
 			
+			MenuItem statusItem = new MenuItem(menu, SWT.NONE);
+			statusItem.setText("Status");
+			MenuItem debugItem = new MenuItem(menu, SWT.NONE);
+			debugItem.setText("Debug");
+			MenuItem lineItem = new MenuItem(menu, SWT.SEPARATOR);
+			lineItem.setText(""); //get rid of eclipse warning, "local variable is never read"	
+			MenuItem exitItem = new MenuItem(menu, SWT.NONE);				
+			exitItem.setText("Exit");
 			
-			ActionListener statusListener = new ActionListener() {
-				public void actionPerformed (ActionEvent e) {
+			statusItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event event) {
 					new Status(totalBytesIn, totalBytesOut);
 				}
-			};						
+			});
 			
-			ActionListener debugListener = new ActionListener() {
-				public void actionPerformed (ActionEvent e) {
+			debugItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event event) {
 					new DebugInfo(events);
 				}
-			};			
+			});				
 			
-			ActionListener exitListener = new ActionListener() {
-				public void actionPerformed (ActionEvent e) {
-					System.exit(0);
+			exitItem.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event event) {
+						image.dispose();
+						display.dispose();
+						shell.dispose();
+						System.exit(0);
 				}
-			};
-	
-			statusItem.addActionListener(statusListener);
-			debugItem.addActionListener(debugListener);
-			exitItem.addActionListener(exitListener);
+			});			
 			
-			menu.add(statusItem);
-			menu.add(debugItem);
-			menu.add(lineItem);
-			menu.add(exitItem);
-			
-			// Create the tray icon.
-			TrayIcon trayIcon = new TrayIcon(image, "Bluetooth Internet Adapter", menu);
-			trayIcon.setImageAutoSize (true);
-			
-			SystemTray.getSystemTray().add(trayIcon);
-		} else {
-			System.err.println("System tray not supported!");
-			System.err.println("Java runtime environments such as OpenJDK " +
-					            "don't support system tray icons.  If you " +
-					            "are using an alternative, try the offical " +
-					            "Sun JRE.");
-			throw new Exception();
+			item.addListener (SWT.MenuDetect, new Listener () {
+				public void handleEvent (Event event) {
+					menu.setVisible (true);
+				}
+			});
+			item.setImage (image);
 		}
+
+		//this while loop is why we need a separate thread
+		//(with an AWT tray icon, we would still need another thread to make the menu pop-up when another shell/window is open)
+		while (!shell.isDisposed ()) {
+			if (!display.readAndDispatch ()) display.sleep ();
+		}
+		
+		image.dispose();
+		display.dispose();
+		shell.dispose();
+		System.exit(0);
 	}
 }
