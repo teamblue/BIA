@@ -19,25 +19,25 @@ import java.net.Socket;
  */
 public class TestServer
 {	
-	private static String getHTTPNewline()
+	/*private static String getHTTPNewline()
 	{
-		return MobileTestConstants.getHTTPNewline();
+		return biamobileTest.MobileTestConstants.getHTTPNewline();
 	}
 	
 	private static int getServerPort()
 	{
-		return MobileTestConstants.getServerPort();
+		return biamobileTest.MobileTestConstants.getServerPort();
 	}
 	
 	public static String getRequestMessage()
 	{
-		return MobileTestConstants.getRequestMessage();
+		return biamobileTest.MobileTestConstants.getRequestMessage();
 	}
 	
 	public static String getExpectedResponse()
 	{
-		return MobileTestConstants.getExpectedResponse();
-	}
+		return biamobileTest.MobileTestConstants.getExpectedResponse();
+	}*/
 	
 	private static String readRequest(BufferedReader br) throws IOException
 	{
@@ -47,56 +47,63 @@ public class TestServer
 		line = br.readLine();
 		while (line != null && !line.isEmpty()) // if line is empty, then we hit the second \r\n
 		{
-			request += line + getHTTPNewline();
+			request += line + biamobileTest.MobileTestConstants.getHTTPNewline();
 			
 			line = br.readLine();
 		}
 		
-		return request;
+		//add the extra newline we skipped over when we exited the loop
+		return request + "\r\n";
 	}
 	
 	public static void main(String[] args)
 	{
 		ServerSocket server = null;
 		
-		String request = getRequestMessage();
-		String response = getExpectedResponse();
-		try
+		String request = ""; //biamobileTest.MobileTestConstants.getTCPRequestMessage();
+		String response = ""; //biamobileTest.MobileTestConstants.getExpectedTCPResponse();
+		
+		while (true)
 		{
-			server = new ServerSocket(getServerPort());
-			System.out.println("Server running on " + server.getInetAddress() + ":" + server.getLocalPort());
-			
-			Socket clientSocket = server.accept(); // waits for connection
-			
-			InputStream is = clientSocket.getInputStream();
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
-			
-			OutputStream os = clientSocket.getOutputStream();
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
-			
-			request = readRequest(br);
-			System.out.println("Request:");
-			System.out.println(request);
-			System.out.println();
-			
-			// if we got correct request
-			if (getRequestMessage().equals(request))
-			{
-				// send response
-				bw.write(getExpectedResponse());
-			}
-			else
-			{
-				bw.write("error");
-				bw.write(getHTTPNewline() + getHTTPNewline());
-			}
-			
-			bw.close();
-			server.close();
-		} 
-		catch (IOException e)
-		{
-			e.printStackTrace();
+		    try
+		    {
+		        server = new ServerSocket(biamobileTest.MobileTestConstants.getServerPort());
+		        System.out.println("Server running on " + server.getInetAddress() + ":" + server.getLocalPort());
+
+		        Socket clientSocket = server.accept(); // waits for connection
+
+		        InputStream is = clientSocket.getInputStream();
+		        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+		        OutputStream os = clientSocket.getOutputStream();
+		        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
+
+		        request = readRequest(br);
+		        System.out.println("Request:");
+		        System.out.print(request);
+
+		        // if we got correct request
+		        if (biamobileTest.MobileTestConstants.getTCPRequestMessage().equals(request) ||
+		                biamobileTest.MobileTestConstants.getHTTPRequestMessage().equals(request))
+		        {
+		            System.out.println("Request is correct");
+		            // send response
+		            bw.write(biamobileTest.MobileTestConstants.getExpectedResponse());
+		        }
+		        
+		        else
+		        {
+		            bw.write("error");
+		            bw.write(biamobileTest.MobileTestConstants.getHTTPNewline() + biamobileTest.MobileTestConstants.getHTTPNewline());
+		        }
+
+		        bw.close();
+		        server.close();
+		    } 
+		    catch (IOException e)
+		    {
+		        e.printStackTrace();
+		    }
 		}
 	}
 }
