@@ -1,9 +1,10 @@
 package biamobileTest;
 
 import biamobile.DesktopRequestHandler;
+import biamobile.RequestHTTPView;
 import jmunit.framework.cldc11.TestCase;
 
-public class DesktopRequestHandlerTest extends TestCase
+public class RequestHTTPViewTest extends TestCase
 {
 
 	/**
@@ -13,35 +14,39 @@ public class DesktopRequestHandlerTest extends TestCase
 	 * @param totalOfTests the total of test methods present in the class.
 	 * @param name this testcase's name.
 	 */
-	public DesktopRequestHandlerTest()
+	public RequestHTTPViewTest()
 	{
-		super(1, "DesktopRequestHandlerTest");
+		super(1, "RequestHTTPViewTest");
 	}
 	
 	public void testExtractRemoteHost()
 	{
-		DesktopRequestHandler drh = new DesktopRequestHandler();
+		RequestHTTPView httpView;
 		
 		String actualResponse;
 		String expectedResponse;
 		
 		// test null
-		actualResponse = drh.extractRemoteHost(null);
+		httpView = new RequestHTTPView(null);
+		actualResponse = httpView.getRemoteHost();
 		expectedResponse = null;
 		assertNull(actualResponse);
 		
 		// test 1
-		actualResponse = drh.extractRemoteHost("GET http://localhost HTTP/1.0 \r\n\r\n".getBytes());
+		httpView = new RequestHTTPView("GET http://localhost HTTP/1.0 \r\n\r\n".getBytes());
+		actualResponse = httpView.getRemoteHost();
 		expectedResponse = "localhost";
 		assertEquals(expectedResponse, actualResponse);
 		
 		// test 2
-		actualResponse = drh.extractRemoteHost("GET http://www.google.ca/ HTTP/1.0 \r\n\r\n".getBytes());
+		httpView = new RequestHTTPView("GET http://www.google.ca/ HTTP/1.0 \r\n\r\n".getBytes());
+		actualResponse = httpView.getRemoteHost();
 		expectedResponse = "www.google.ca";
 		assertEquals(expectedResponse, actualResponse);
 		
 		// test 3
-		actualResponse = drh.extractRemoteHost("GET http://www.google.ca/more/even_more/index.html HTTP/1.0 \r\n\r\n".getBytes());
+		httpView = new RequestHTTPView("GET http://www.google.ca/more/even_more/index.html HTTP/1.0 \r\n\r\n".getBytes());
+		actualResponse = httpView.getRemoteHost();
 		expectedResponse = "www.google.ca";
 		assertEquals(expectedResponse, actualResponse);
 	}	
