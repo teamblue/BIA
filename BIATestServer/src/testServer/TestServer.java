@@ -53,7 +53,7 @@ public class TestServer
 		}
 		
 		//add the extra newline we skipped over when we exited the loop
-		return request + "\r\n";
+		return request + biamobileTest.MobileTestConstants.getHTTPNewline();
 	}
 	
 	public static void main(String[] args)

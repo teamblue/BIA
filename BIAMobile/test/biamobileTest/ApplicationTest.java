@@ -44,11 +44,11 @@ public class ApplicationTest extends MIDlet implements CommandListener
 		
 		if (responseStr.equals(MobileTestConstants.getTCPRequestMessage()))
 		{
-			mMainForm.append("Passed...");
+			System.out.println("Passed...");
 		}
 		else
 		{
-			mMainForm.append("Failed...");
+			System.out.println("Failed...");
 		}
 		
 	}

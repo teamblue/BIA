@@ -25,20 +25,21 @@ public class DesktopRequestHandler
 		return response;
 	}
 	
-	private String extractRemoteHost(byte[] request)
+	public String extractRemoteHost(byte[] request)
 	{
 		String remoteHost = null;
 		
-		// gets first line
-		StringBuffer firstLine = new StringBuffer();
-		for (int i = 0; i < request.length && request[i] != '\n'; i++)
+		if (request != null)
 		{
-			firstLine.append(request[i]);
+			// gets first line
+			StringBuffer firstLine = new StringBuffer();
+			for (int i = 0; i < request.length && request[i] != '\n'; i++)
+			{
+				firstLine.append(request[i]);
+			}
 		}
 		
-		
-		
 		//return remoteHost;
-		return "localhost";
+		return remoteHost;
 	}
 }
