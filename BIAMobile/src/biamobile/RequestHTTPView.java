@@ -75,4 +75,15 @@ public class RequestHTTPView
 		//return remoteHost;
 		return remoteHost;
 	}
+	
+	public byte[] getRequestData()
+	{
+		return rawData;
+		
+	}
+	
+	public byte[] getRawData()
+	{
+		return this.rawData;
+	}
 }

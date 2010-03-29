@@ -16,7 +16,7 @@ public class RequestHTTPViewTest extends TestCase
 	 */
 	public RequestHTTPViewTest()
 	{
-		super(1, "RequestHTTPViewTest");
+		super(2, "RequestHTTPViewTest");
 	}
 	
 	public void testExtractRemoteHost()
@@ -49,7 +49,23 @@ public class RequestHTTPViewTest extends TestCase
 		actualResponse = httpView.getRemoteHost();
 		expectedResponse = "www.google.ca";
 		assertEquals(expectedResponse, actualResponse);
-	}	
+	}
+	
+	public void testGetRawData()
+	{
+		RequestHTTPView httpView;
+		
+		byte[] dataToSend;
+		
+		// test null
+		httpView = new RequestHTTPView(null);
+		assertNull(httpView.getRawData());
+		
+		dataToSend = "GET http://localhost HTTP/1.0 \r\n\r\n".getBytes();
+		
+		httpView = new RequestHTTPView(dataToSend);
+		assertEquals(dataToSend, httpView.getRawData());
+	}
 
 	/**
 	 * This method stores all the test methods invocation. The developer must
@@ -67,6 +83,10 @@ public class RequestHTTPViewTest extends TestCase
 		{
 			case 0:
 				testExtractRemoteHost();
+			break;
+			
+			case 1:
+				testGetRawData();
 			break;
 		}
 	}
