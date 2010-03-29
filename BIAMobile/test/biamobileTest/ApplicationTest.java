@@ -1,5 +1,7 @@
 package biamobileTest;
 
+import java.io.IOException;
+
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
@@ -7,6 +9,7 @@ import javax.microedition.lcdui.Form;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
+import biamobile.DesktopRequestHandler;
 import biamobile.MobileDesktopHandler;
 
 /**
@@ -23,11 +26,19 @@ public class ApplicationTest extends MIDlet implements CommandListener
 	
 	private void testRequestResponse()
 	{
-		MobileDesktopHandler mdh = new MobileDesktopHandler();
+		DesktopRequestHandler drh = new DesktopRequestHandler();
 		
-		byte[] response;
+		byte[] response = null;
 		
-		response = mdh.sendRequest(MobileTestConstants.getTCPRequestMessage().getBytes());
+		try
+		{
+			response = drh.sendRequest(MobileTestConstants.getTCPRequestMessage().getBytes());
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		String responseStr = new String(response);
 		
