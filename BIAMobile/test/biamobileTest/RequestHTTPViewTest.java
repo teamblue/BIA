@@ -16,7 +16,7 @@ public class RequestHTTPViewTest extends TestCase
 	 */
 	public RequestHTTPViewTest()
 	{
-		super(3, "RequestHTTPViewTest");
+		super(4, "RequestHTTPViewTest");
 	}
 	
 	public void testExtractRemoteHost()
@@ -45,7 +45,19 @@ public class RequestHTTPViewTest extends TestCase
 		assertEquals(expectedResponse, actualResponse);
 		
 		// test 3
+		httpView = new RequestHTTPView("GET http://www.google.ca:877/ HTTP/1.0 \r\n\r\n".getBytes());
+		actualResponse = httpView.getRemoteHost();
+		expectedResponse = "www.google.ca";
+		assertEquals(expectedResponse, actualResponse);
+		
+		// test 4
 		httpView = new RequestHTTPView("GET http://www.google.ca/more/even_more/index.html HTTP/1.0 \r\n\r\n".getBytes());
+		actualResponse = httpView.getRemoteHost();
+		expectedResponse = "www.google.ca";
+		assertEquals(expectedResponse, actualResponse);
+		
+		// test 5
+		httpView = new RequestHTTPView("GET http://www.google.ca:899/more/even_more/index.html HTTP/1.0 \r\n\r\n".getBytes());
 		actualResponse = httpView.getRemoteHost();
 		expectedResponse = "www.google.ca";
 		assertEquals(expectedResponse, actualResponse);
@@ -61,10 +73,10 @@ public class RequestHTTPViewTest extends TestCase
 		httpView = new RequestHTTPView(null);
 		assertNull(httpView.getRawData());
 		
+		// test 1
 		dataToSend = "GET http://localhost HTTP/1.0 \r\n\r\n".getBytes();
-		
 		httpView = new RequestHTTPView(dataToSend);
-		assertEquals(dataToSend, httpView.getRawData());
+		assertTrue(byteArrayEqual(dataToSend, httpView.getRawData()));
 	}
 	
 	// tests if two byte arrays are equal
@@ -99,18 +111,51 @@ public class RequestHTTPViewTest extends TestCase
 		httpView = new RequestHTTPView(null);
 		assertNull(httpView.getRequestData());
 		
+		// test 1
 		dataToSend = "GET http://localhost/ HTTP/1.0 \r\n\r\n".getBytes();
 		expectedData = "GET / HTTP/1.0 \r\n\r\n".getBytes();
-		
 		httpView = new RequestHTTPView(dataToSend);
-		
 		assertTrue(byteArrayEqual(expectedData, httpView.getRequestData())); // have to use byteArrayEqual as assertEquals(byte[], byte[]) just checks if pointers are same
 		
+		// test 2
 		dataToSend = "GET http://www.google.ca/page/index.html HTTP/1.0 \r\n\r\n".getBytes();
 		expectedData = "GET /page/index.html HTTP/1.0 \r\n\r\n".getBytes();
-		
 		httpView = new RequestHTTPView(dataToSend);
 		assertTrue(byteArrayEqual(expectedData, httpView.getRequestData()));
+		
+		// test 3
+		dataToSend = "GET http://www.google.ca:866/page/index.html HTTP/1.0 \r\n\r\n".getBytes();
+		expectedData = "GET /page/index.html HTTP/1.0 \r\n\r\n".getBytes();
+		httpView = new RequestHTTPView(dataToSend);
+		assertTrue(byteArrayEqual(expectedData, httpView.getRequestData()));
+	}
+	
+	public void getRemotePortTest()
+	{
+		RequestHTTPView httpView;
+		
+		int expectedPort;
+		
+		// test null
+		httpView = new RequestHTTPView(null);
+		expectedPort = 80; // defaults to 80
+		assertEquals(expectedPort, httpView.getRemotePort());
+		
+		// test 1
+		httpView = new RequestHTTPView("GET http://localhost HTTP/1.0 \r\n\r\n".getBytes());
+		expectedPort = 80; // defaults to 80
+		assertEquals(expectedPort, httpView.getRemotePort());
+		
+		// test 2
+		httpView = new RequestHTTPView("GET http://www.google.ca/ HTTP/1.0 \r\n\r\n".getBytes());
+		expectedPort = 80; // defaults to 80
+		assertEquals(expectedPort, httpView.getRemotePort());
+		
+		// test 3
+		httpView = new RequestHTTPView("GET http://www.google.ca:888/ HTTP/1.0 \r\n\r\n".getBytes());
+		expectedPort = 888;
+		assertEquals(expectedPort, httpView.getRemotePort());
+		
 	}
 
 	/**
@@ -137,6 +182,10 @@ public class RequestHTTPViewTest extends TestCase
 			
 			case 2:
 				testGetRequestData();
+			break;
+			
+			case 3:
+				getRemotePortTest();
 			break;
 		}
 	}

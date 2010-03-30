@@ -11,6 +11,7 @@ public class RequestHTTPView
 	
 	private byte[] requestData;
 	private String remoteHost;
+	private int remotePort;
 	
 	private final static String WHITESPACE = " ";
 	
@@ -19,10 +20,12 @@ public class RequestHTTPView
 		this.rawData = data;
 		remoteHost = null;
 		
+		remotePort = 80; // defaults to 80
+		
 		extractRequestData();
 	}
 	
-	// pull out remote host
+	// pull out remote host, remote port, etc from request
 	// make a byte array containing the request data to be sent
 	private void extractRequestData()
 	{
@@ -67,18 +70,38 @@ public class RequestHTTPView
 			
 			if (index != -1)
 			{
+				String remoteHostSection;
+				
 				int endIndex = hostSection.indexOf("/", index+2); // look for last index of "/", as in http://www.google.ca/
 				
 				if (endIndex == -1) // if no such character found
 				{
-					remoteHost = hostSection.substring(index+2); // +2 to skip over //
+					
+					remoteHostSection = hostSection.substring(index+2); // +2 to skip over //
 					extractedHostSection = "/"; // contains "/" as in GET / HTTP/1.0
 				}
 				else
 				{
-					remoteHost = hostSection.substring(index+2, endIndex); // +2 to skip over //
+					remoteHostSection = hostSection.substring(index+2, endIndex); // +2 to skip over //
 					extractedHostSection = hostSection.substring(endIndex); // contains for ex.
 					// "/page/index.html" as in GET /page/index.html HTTP/1.0
+				}
+				
+				// look for port in remoteHostSection
+				int portIndex = remoteHostSection.indexOf(":"); // look for index of a port in for ex www.google.ca:888
+				
+				if (portIndex == -1)
+				{
+					remoteHost = remoteHostSection;
+					remotePort = 80;
+				}
+				else
+				{
+					remoteHost = remoteHostSection.substring(0, portIndex);
+					
+					String portString = remoteHostSection.substring(portIndex + 1);
+					
+					remotePort = Integer.parseInt(portString);
 				}
 			}
 			else
@@ -127,11 +150,15 @@ public class RequestHTTPView
 	public byte[] getRequestData()
 	{
 		return requestData;
-		
 	}
 	
 	public byte[] getRawData()
 	{
 		return this.rawData;
+	}
+
+	public int getRemotePort()
+	{
+		return remotePort;
 	}
 }
