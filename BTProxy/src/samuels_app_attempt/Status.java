@@ -27,6 +27,7 @@ public class Status {
 	
 	private Shell shell;
 	private Display display;
+	private Composite cmpNotify;
 	private Composite cmpBandwidth;
 	private Composite cmpCost;
 	private Composite cmpMain;
@@ -51,6 +52,16 @@ public class Status {
 	private long bytesIn = 0;
 	private long bytesOut = 0;
 	private long bytesTotal;
+	
+	private Label lblNotifyTitle;
+	private Label lblNotifyDesc;
+	private Label lblNotifyCost;
+	private Label lblNotifyCost2;	
+	private Label lblNotifyKB;
+	private Label lblNotifyKB2;
+	private Label lblNotifyKB3;
+	private Text txtNotifyCost;
+	private Text txtNotifyKB;
 	
 	private final Font SUBTITLE = new Font(display, "Arial", 9, SWT.BOLD);
 	
@@ -87,6 +98,7 @@ public class Status {
 		createCmpMain();
 		createCmpBandwidth();
 		createCmpCost();
+		createcmpNotify();
 		addListeners();
 		
 		//set program icon
@@ -135,9 +147,9 @@ public class Status {
 		GridLayout grlBandwidth = new GridLayout();
 		grlBandwidth.numColumns = 2;
 		
-		GridData grdSpan2 = new GridData();
-		grdSpan2.horizontalSpan = 2;
-		grdSpan2.horizontalAlignment = SWT.CENTER;
+		GridData grdSubTitle = new GridData();
+		grdSubTitle.horizontalSpan = 2;
+		grdSubTitle.horizontalAlignment = SWT.CENTER;
 		
 		GridData grdFill = new GridData();
 		grdFill.horizontalAlignment = SWT.FILL;
@@ -146,17 +158,13 @@ public class Status {
 		cmpBandwidth.setLayout(grlBandwidth);
 		cmpBandwidth.setLayoutData(grdFill);
 		
-		//lblBandwidthTitle start
 		lblBandwidthTitle = new Label(cmpBandwidth, SWT.NONE);
 		lblBandwidthTitle.setText("Data Usage");
 		lblBandwidthTitle.setFont(SUBTITLE);
-		lblBandwidthTitle.setLayoutData(grdSpan2);
-		//lblBandwidthTitle end
-		
-		//lblUnits start
+		lblBandwidthTitle.setLayoutData(grdSubTitle);
+
 		lblUnits = new Label(cmpBandwidth, SWT.NONE);
 		lblUnits.setText("Unit:");
-		//lblUnits end
 		
 		//cboUnits start
 		cboUnits = new Combo(cmpBandwidth, SWT.DROP_DOWN | SWT.READ_ONLY);
@@ -169,35 +177,23 @@ public class Status {
 		cboUnits.setText("B");
 		//cboUnits end
 		
-		//lblDataInTitle start
 	    lblDataInTitle = new Label(cmpBandwidth, SWT.NONE);
 		lblDataInTitle.setText("Data In:");
-	    //lblDataInTitle end	
-		
-	    //lblDataInNum start
+
 	    lblDataInNum = new Label(cmpBandwidth, SWT.NONE);
 		lblDataInNum.setText("" + bytesIn);
-	    //lblDataInTitle end	
-		
-	    //lblDataOutTitle start
+
 	    lblDataOutTitle = new Label(cmpBandwidth, SWT.NONE);
 		lblDataOutTitle.setText("Data Out:");
-	    //lblDataOutTitle end			
-		
-	    //lblDataOutNum start
+
 	    lblDataOutNum = new Label(cmpBandwidth, SWT.NONE);
 		lblDataOutNum.setText("" + bytesOut);
-	    //lblDataOutNum end			
-		
-	    //lblDataTotalTitle start
+
 	    lblDataTotalTitle = new Label(cmpBandwidth, SWT.NONE);
 		lblDataTotalTitle.setText("Data Total:");
-	    //lblDataTotalTitle end
-		
-	    //lblDataTotalNum start
+
 	    lblDataTotalNum = new Label(cmpBandwidth, SWT.NONE);
-		lblDataTotalNum.setText("" + bytesTotal);
-	    //lblDataTotalNum end		
+		lblDataTotalNum.setText("" + bytesTotal);	
 
 	}
 	
@@ -206,9 +202,9 @@ public class Status {
 		GridLayout grlCost = new GridLayout();
 		grlCost.numColumns = 2;
 		
-		GridData grdSpan2 = new GridData();
-		grdSpan2.horizontalSpan = 2;
-		grdSpan2.horizontalAlignment = SWT.CENTER;
+		GridData grdSubTitle = new GridData();
+		grdSubTitle.horizontalSpan = 2;
+		grdSubTitle.horizontalAlignment = SWT.CENTER;
 		
 		GridData grdCost = new GridData();
 		grdCost.widthHint = 33;
@@ -220,17 +216,13 @@ public class Status {
 		cmpCost.setLayout(grlCost);
 		cmpCost.setLayoutData(grdFill);
 		
-		//lblCostTitle start
 		lblCostTitle = new Label(cmpCost, SWT.NONE);
 		lblCostTitle.setText("Cost Estimate");
 		lblCostTitle.setFont(SUBTITLE);
-		lblCostTitle.setLayoutData(grdSpan2);
-		//lblCostTitle end
-	
-		//lblCostPerKB start
+		lblCostTitle.setLayoutData(grdSubTitle);
+
 		lblCostPerKB = new Label(cmpCost, SWT.NONE);
 		lblCostPerKB.setText("Cost per KB: $");
-		//lblCostPerKB end
 		
 		//txtCostPerKB start
 		txtCostPerKB = new Text(cmpCost, SWT.NONE);
@@ -240,18 +232,89 @@ public class Status {
 		if (Main.costPerKB > -1)
 			txtCostPerKB.setText("" + Main.costPerKB);
 		//txtCostPerKB end
-		
-		//lblCostTotalTitle start
+
 		lblCostTotalTitle = new Label(cmpCost, SWT.NONE);
 		lblCostTotalTitle.setText("Usage Cost:  $");
-		//lblCostTotalTitle end
-		
-		//lblCostTotalNum start
+
 		lblCostTotalNum = new Label(cmpCost, SWT.NONE);
-		//lblCostTotalNum end	
 		
 		updateCost();		
 	}	
+	
+	private void createcmpNotify() {
+		
+		final char GREATER_EQUAL_THAN = 8805;
+		
+		GridLayout grlNotify = new GridLayout();
+		grlNotify.numColumns = 4;
+		
+		GridData grdSubTitle = new GridData();
+		grdSubTitle.horizontalSpan = 4;
+		grdSubTitle.horizontalAlignment = SWT.CENTER;
+		
+		GridData grdSpan2 = new GridData();
+		grdSpan2.horizontalSpan = 2;		
+		
+		GridData grdSpan3 = new GridData();
+		grdSpan3.horizontalSpan = 4;
+
+		GridData grdAlert = new GridData();
+		grdAlert.widthHint = 33;	
+		
+		GridData grdAlert2 = new GridData();
+		grdAlert2.widthHint = 33;
+		grdAlert2.horizontalSpan = 2;
+		
+		GridData grdFill = new GridData();
+		grdFill.horizontalAlignment = SWT.FILL;
+		
+		cmpNotify = new Composite(cmpMain, SWT.BORDER);
+		cmpNotify.setLayout(grlNotify);
+		cmpNotify.setLayoutData(grdFill);
+		
+		lblNotifyTitle = new Label(cmpNotify, SWT.NONE);
+		lblNotifyTitle.setText("Notifications");
+		lblNotifyTitle.setFont(SUBTITLE);
+		lblNotifyTitle.setLayoutData(grdSubTitle);
+		
+		lblNotifyDesc = new Label(cmpNotify, SWT.NONE);
+		lblNotifyDesc.setText("Notify me when...");
+		lblNotifyDesc.setLayoutData(grdSpan3);
+		
+		lblNotifyCost = new Label(cmpNotify, SWT.NONE);
+		lblNotifyCost.setText("Cost:");
+		
+		lblNotifyCost2 = new Label(cmpNotify, SWT.NONE);
+		lblNotifyCost2.setText(String.valueOf(GREATER_EQUAL_THAN) + " $");	
+		
+		//txtNotifyCost start
+		txtNotifyCost = new Text(cmpNotify, SWT.NONE);
+		txtNotifyCost.setTextLimit(6);
+		txtNotifyCost.setLayoutData(grdAlert2);
+		
+		if (Main.notifyCost > -1)
+			txtNotifyCost.setText("" + Main.notifyCost);		
+		//txtNotifyCost end
+		
+		lblNotifyKB = new Label(cmpNotify, SWT.NONE);
+		lblNotifyKB.setText("Usage:  ");		
+		
+		lblNotifyKB2 = new Label(cmpNotify, SWT.NONE);
+		lblNotifyKB2.setText(String.valueOf(GREATER_EQUAL_THAN));			
+		
+		//txtNotifyKB start
+		txtNotifyKB = new Text(cmpNotify, SWT.NONE);
+		txtNotifyKB.setTextLimit(6);
+		txtNotifyKB.setLayoutData(grdAlert);
+		
+		if (Main.notifyKB > -1)
+			txtNotifyKB.setText("" + Main.notifyKB);			
+		//txtNotifyKB end
+		
+		lblNotifyKB3 = new Label(cmpNotify, SWT.NONE);
+		lblNotifyKB3.setText("KB");
+
+	}		
 	
 	private void addListeners() {
 		//'X' button listener
@@ -278,7 +341,25 @@ public class Status {
 						updateCost();
 					}
 				}
+		 );
+		
+		//txtNotifyCost text modify listener
+		txtNotifyCost.addModifyListener(
+				new ModifyListener() {
+					public void modifyText(ModifyEvent e) {
+						updateNotifyCost();
+					}
+				}
 		 );		
+		
+		//txtNotifyKB text modify listener
+		txtNotifyKB.addModifyListener(
+				new ModifyListener() {
+					public void modifyText(ModifyEvent e) {
+						updateNotifyKB();
+					}
+				}
+		 );				
 		
 	}
  
@@ -294,6 +375,30 @@ public class Status {
 		}
 		lblCostTotalNum.pack();
 	}
+	
+	private void updateNotifyCost() {
+
+		try {
+			Main.notifyCost = (float) Float.parseFloat(txtNotifyCost.getText());
+			Main.notifiedCost = false;
+		}
+		catch(Exception ex) {
+			Main.notifyCost = -1;
+		}
+		
+	}	
+	
+	private void updateNotifyKB() {
+
+		try {
+			Main.notifyKB = Integer.parseInt(txtNotifyKB.getText());
+			Main.notifiedKB = false;
+		}
+		catch(Exception ex) {
+			Main.notifyKB = -1;
+		}
+		
+	}	
 	
 	private void changeUnits(String newUnit) {
 		int denominator;
