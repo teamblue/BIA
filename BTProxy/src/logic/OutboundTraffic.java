@@ -25,7 +25,8 @@ public class OutboundTraffic extends Thread {
 		try {
 			InputStream is = browserSession.getInputStream();
 
-			byte[] buffer = new byte[1024];
+			final int MAX_BUFFER_LEN = 1024;
+			byte[] buffer = new byte[MAX_BUFFER_LEN];
 			int bufferLength;
 			final int CONNECTION_CLOSED = -1;
 			// is.read waits until there's something to read or the connection
@@ -33,12 +34,25 @@ public class OutboundTraffic extends Thread {
 			// only work once you attempt to read data from the closed
 			// connection.
 			while ((bufferLength = is.read(buffer)) != CONNECTION_CLOSED) {
-				// TODO: Perhaps the amount of input read in won't be enough to
-				// extract the full HTTP header. In that case we should really
-				// make sure that we're reading in enough input before
-				// extracting the header... but we still need to check if the
-				// connection is closed at any time.
 				String message = new String(buffer);
+				
+				// Read in more data if the HTTP header isn't complete.
+				final int NOT_FOUND = -1;
+				while (message.indexOf("\r\n") == NOT_FOUND) {
+					// Wait for more buffer to be read in.
+					int r = is.read(buffer, bufferLength,
+							MAX_BUFFER_LEN - bufferLength);
+					
+					// Exit the loop if the connection was closed.
+					if (r == -1) {
+						break;
+					}
+					
+					// Update the buffer and its length.
+					bufferLength += r;
+					message = new String(buffer);
+				}
+				
 				String host = new HTTPHeader(message).getHost();
 
 				// Look for an existing socket to the destination
