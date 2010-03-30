@@ -1,3 +1,26 @@
+***TO BUILD AND RUN IN ECLIPSE***
+
+- The BTProxy/lib directory contains 3 files:
+	* swt.jar
+	* swt-linux.jar
+	* swt-macosx.jar
+
+- By default, swt.jar is the SWT JAR for Windows since this is the most common OS.
+
+- If you are running Linux:
+	* rename swt.jar to swt-windows.jar
+	* rename swt-linux.jar to swt.jar
+
+- If you are running Mac OSX:
+	* rename swt.jar to swt-windows.jar
+	* rename swt-maxocx.jar to swt.jar
+
+- Refresh the Package Explorer list in Eclipse
+
+- Build and run Main.java in Eclipse
+
+
+
 ***TO COMPILE AND RUN AS A JAR***
 
 
