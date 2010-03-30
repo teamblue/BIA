@@ -23,15 +23,14 @@
 
 ***TO COMPILE AND RUN AS A JAR***
 
-
 **STEP 1**
 - Open Eclipse
 - File -> Export
 - Select "JAR file" from "Java" and click Next
-- Type in the export destination for the JAR file near the bottom of the window and click Next
+- Select the BTProxy project and type-in the export destination for the JAR file
+- Click Next
 - Click Next again
-- 
-Select the "Use existing manifest from workspace" option and select MANIFEST.MF from the BTProxy directory
+- Select the "Use existing manifest from workspace" option and select MANIFEST.MF from the BTProxy directory
 - The JAR file has now been created
 
 **STEP 2**
@@ -44,4 +43,3 @@ Select the "Use existing manifest from workspace" option and select MANIFEST.MF 
 
 **STEP 4**
 Run the project JAR you created in step 1
-
