@@ -84,7 +84,8 @@ public class TestServer
 
 		        // if we got correct request
 		        if (biamobileTest.MobileTestConstants.getTCPRequestMessage().equals(request) ||
-		                biamobileTest.MobileTestConstants.getHTTPRequestMessage().equals(request))
+		                biamobileTest.MobileTestConstants.getHTTPRequestMessage().equals(request) ||
+		                biamobileTest.MobileTestConstants.getFullApplicationTestRequestMobileApp().equals(request))
 		        {
 		            System.out.println("Request is correct");
 		            // send response

@@ -19,10 +19,10 @@ public class DesktopRequestHandler
 		RequestHTTPView httpView = new RequestHTTPView(request);
 		
 		String remoteHost = httpView.getRemoteHost();
+		int remotePort = httpView.getRemotePort();
 		byte[] response = null;
 		
-		response = rch.performConnectTCP(remoteHost, 8741, request);
-		
+		response = rch.performConnectTCP(remoteHost, remotePort, request);
 		
 		return response;
 	}

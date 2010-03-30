@@ -6,9 +6,10 @@ import java.util.Hashtable;
 import jmunit.framework.cldc11.TestCase;
 import biamobile.RemoteConnectionHandler;
 
+// to run these tests, must run testServer.TestServer first
 public class TestRemoteConnectionHandler extends TestCase
 {
-
+	
 	/**
 	 * The default constructor. It just transmits the necessary informations to
 	 * the superclass.
@@ -99,7 +100,7 @@ public class TestRemoteConnectionHandler extends TestCase
 				performConnectTCP1Test();
 				break;
 			case 1:
-				performConnectHTTP1Test();
+				//performConnectHTTP1Test();
 				break;
 		}
 	}

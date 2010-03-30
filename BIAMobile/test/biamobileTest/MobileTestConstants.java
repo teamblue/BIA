@@ -17,11 +17,31 @@ public class MobileTestConstants
 	    return "localhost";
 	}
 	
+	public static String getFullApplicationTestRequestBluetooth()
+	{
+		String message =
+			"GET http://" + getTestServerHostName() + ":" + getServerPort() + "/ HTTP/1.0" + getHTTPNewline() +
+			"Host: " + getTestServerHostName() + getHTTPNewline() +
+			getHTTPNewline();
+		
+		return message;
+	}
+	
+	public static String getFullApplicationTestRequestMobileApp() // the request from mobile app (without http://blah blah)
+	{
+		String message =
+			"GET / HTTP/1.0" + getHTTPNewline() +
+			"Host: " + getTestServerHostName() + getHTTPNewline() +
+			getHTTPNewline();
+		
+		return message;
+	}
+	
 	public static String getTCPRequestMessage()
 	{
 		String message =
-			"GET http://" + getTestServerHostName() + "/ HTTP/1.0" + getHTTPNewline() +
-			"Host: localhost" + getHTTPNewline() +
+			"GET http://" + getTestServerHostName() + ":" + getServerPort() + "/ HTTP/1.0" + getHTTPNewline() +
+			"Host: " + getTestServerHostName() + getHTTPNewline() +
 			getHTTPNewline();
 		
 		return message;
