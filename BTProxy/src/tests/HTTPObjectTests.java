@@ -1,7 +1,7 @@
 package tests;
 
+import logic.HTTPObject;
 import junit.framework.TestCase;
-import app.HTTPObject;
 
 /**
  * Tests the HTTP object's ability to parse information out of a stream.

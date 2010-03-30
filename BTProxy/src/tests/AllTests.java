@@ -16,7 +16,6 @@ public class AllTests extends TestCase {
 		// Add each file of test cases here.
 		suite.addTestSuite(LibraryTests.class);
 		suite.addTestSuite(HTTPObjectTests.class);
-		suite.addTestSuite(ConnectionTests.class);
 		
 		return suite;
 	}
