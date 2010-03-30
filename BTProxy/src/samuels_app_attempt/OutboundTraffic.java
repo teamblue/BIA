@@ -76,7 +76,6 @@ public class OutboundTraffic extends Thread {
 				
 				if (existingServerSession == null) {
 					// Establish a new socket to the destination server.
-					System.err.println("New Host: " + host);
 					Main.addEvent("New Host: " + host);
 					existingServerSession = new Socket(host, 80);
 					serverSessions.add(existingServerSession);
@@ -88,7 +87,6 @@ public class OutboundTraffic extends Thread {
 							existingServerSession.getInputStream());
 					inboundTraffic.start();
 				} else {
-					System.err.println("Old Host: " + host);
 					Main.addEvent("Old Host: " + host);
 				}
 				
@@ -98,10 +96,9 @@ public class OutboundTraffic extends Thread {
 				Main.addBytesOut(bufferLength);
 			}
 			
-			System.out.println ("Outbound connection closed!");
 			Main.addEvent("Outbound connection closed");
+			
 		} catch(Exception e) {
-			System.out.println ("Outbound: " + e);
 			Main.addEvent("Outbound Exception: " + e);
 		}
 	}

@@ -192,3 +192,28 @@ org.eclipse.core.runtime.CoreException: Unable to retrieve system properties
 	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:121)
 !SUBENTRY 1 org.eclipse.jdt.launching 4 150 2010-03-26 11:47:59.398
 !MESSAGE Unable to retrieve system properties
+!SESSION 2010-03-30 00:29:34.557 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.6.0_18
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_CA
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os win32 -ws win32 -arch x86 -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.eclipse.core.resources 2 10035 2010-03-30 00:29:37.928
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY org.eclipse.jdt.launching 1 0 2010-03-30 00:29:39.267
+!MESSAGE Installed JRE 'JVM 1.4' removed due to missing VM type extension.
+
+!ENTRY org.eclipse.jdt.launching 1 0 2010-03-30 00:29:39.272
+!MESSAGE Installed JRE 'JVM 1.4.1' removed due to missing VM type extension.
+
+!ENTRY org.eclipse.jdt.launching 1 0 2010-03-30 00:29:39.273
+!MESSAGE Installed JRE 'JVM 1.4.2' removed due to missing VM type extension.
+
+!ENTRY org.eclipse.jdt.launching 1 0 2010-03-30 00:29:39.273
+!MESSAGE Installed JRE 'JVM 1.5' removed due to missing VM type extension.
+
+!ENTRY org.eclipse.jdt.launching 1 0 2010-03-30 00:29:39.273
+!MESSAGE Installed JRE 'JVM 1.5.0 (MacOS X Default)' removed due to missing VM type extension.

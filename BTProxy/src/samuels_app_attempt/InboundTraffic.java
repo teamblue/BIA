@@ -44,10 +44,9 @@ public class InboundTraffic extends Thread {
 			}
 
 			isClosed = true;
-			System.out.println ("Inbound connection closed!");
 			Main.addEvent("Inbound connection closed");
+			
 		} catch(Exception e) {
-			System.out.println ("Inbound: " + e);
 			Main.addEvent("Inbound Exception: " + e);
 		}
 	}
