@@ -13,7 +13,7 @@
 
 - If you are running Mac OSX:
 	* rename swt.jar to swt-windows.jar
-	* rename swt-maxocx.jar to swt.jar
+	* rename swt-macosx.jar to swt.jar
 
 - Refresh the Package Explorer list in Eclipse
 
@@ -42,4 +42,4 @@
 - Make sure the file, icon.png, is in the same directory as the project JAR you created in step 1
 
 **STEP 4**
-Run the project JAR you created in step 1
+- Run the project JAR you created in step 1
