@@ -1,0 +1,6 @@
+*.swp
+*.swo
+*.class
+bin
+*.mtj.tmp
+.metadata/*
