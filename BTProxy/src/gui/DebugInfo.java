@@ -1,6 +1,5 @@
 package gui;
 
-import logic.Main;
 import modal.SessionDetails;
 
 import org.eclipse.swt.events.SelectionAdapter;
@@ -32,6 +31,7 @@ public class DebugInfo {
 
 	private String[] events = null;
 
+	//Constructor
 	public DebugInfo() {
 		String[] events = SessionDetails.getEvents();
 		display = Display.getDefault();
@@ -65,6 +65,7 @@ public class DebugInfo {
 		}
 	}
 
+	//Create the GUI
 	private void createWindow() {
 		Image icon; // program's icon
 
@@ -107,6 +108,7 @@ public class DebugInfo {
 		shell.setLocation(x, y);
 	}
 
+	//Create's main composite
 	private void createCmpMain() {
 		final int numCols = 3;
 
@@ -163,6 +165,7 @@ public class DebugInfo {
 		});
 	}
 
+	//Close this window/class
 	private void doExit() {
 		lstList = null; // important
 		shell.dispose();

@@ -26,6 +26,7 @@ public class SessionDetails {
 	public static boolean notifiedCost;
 	public static boolean notifiedKB;
 	
+	
 	public static String[] getEvents() {
 		return events;
 	}
@@ -141,4 +142,30 @@ public class SessionDetails {
 		}
 
 	}
+	
+	
+	//Update cost and notify the program that the cost was changed. Called from Status class.
+	public static void updateNotifyCost(String notifyCost) {
+
+		try {
+			SessionDetails.notifyCost = (float) Float.parseFloat(notifyCost);
+			SessionDetails.notifiedCost = false;
+		} catch (Exception ex) {
+			SessionDetails.notifyCost = -1;
+		}
+
+	}
+
+	//Update KB and notify the program that the cost was changed. Called from Status class.
+	public static void updateNotifyKB(String notifyKB) {
+
+		try {
+			SessionDetails.notifyKB = Integer.parseInt(notifyKB);
+			SessionDetails.notifiedKB = false;
+		} catch (Exception ex) {
+			SessionDetails.notifyKB = -1;
+		}
+
+	}	
+	
 }

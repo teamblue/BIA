@@ -1,6 +1,5 @@
 package gui;
 
-import logic.Main;
 import modal.SessionDetails;
 
 import org.eclipse.swt.events.ModifyEvent;
@@ -137,6 +136,7 @@ public class Status {
 		shell.setLocation(x, y);
 	}
 
+	//Create main composite
 	private void createCmpMain() {
 		final int numCols = 1;
 
@@ -147,6 +147,7 @@ public class Status {
 		cmpMain.setLayout(grlMain);
 	}
 
+	//Create bandwidth composite
 	private void createCmpBandwidth() {
 
 		GridLayout grlBandwidth = new GridLayout();
@@ -202,6 +203,7 @@ public class Status {
 
 	}
 
+	//Create main composite
 	private void createCmpCost() {
 
 		GridLayout grlCost = new GridLayout();
@@ -347,14 +349,14 @@ public class Status {
 		// txtNotifyCost text modify listener
 		txtNotifyCost.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				updateNotifyCost();
+				SessionDetails.updateNotifyCost(txtNotifyCost.getText());
 			}
 		});
 
 		// txtNotifyKB text modify listener
 		txtNotifyKB.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				updateNotifyKB();
+				SessionDetails.updateNotifyKB(txtNotifyKB.getText());
 			}
 		});
 
@@ -371,28 +373,6 @@ public class Status {
 			lblCostTotalNum.setText("N/A");
 		}
 		lblCostTotalNum.pack();
-	}
-
-	private void updateNotifyCost() {
-
-		try {
-			SessionDetails.notifyCost = (float) Float.parseFloat(txtNotifyCost.getText());
-			SessionDetails.notifiedCost = false;
-		} catch (Exception ex) {
-			SessionDetails.notifyCost = -1;
-		}
-
-	}
-
-	private void updateNotifyKB() {
-
-		try {
-			SessionDetails.notifyKB = Integer.parseInt(txtNotifyKB.getText());
-			SessionDetails.notifiedKB = false;
-		} catch (Exception ex) {
-			SessionDetails.notifyKB = -1;
-		}
-
 	}
 
 	private void changeUnits(String newUnit) {
