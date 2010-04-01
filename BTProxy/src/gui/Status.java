@@ -1,6 +1,7 @@
 package gui;
 
 import logic.Main;
+import modal.SessionDetails;
 
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -67,7 +68,9 @@ public class Status {
 
 	private final Font SUBTITLE = new Font(display, "Arial", 9, SWT.BOLD);
 
-	public Status(long bytesIn, long bytesOut) {
+	public Status(SessionDetails sessionDetails) {
+		long bytesIn = sessionDetails.getTotalBytesIn();
+		long bytesOut = sessionDetails.getTotalBytesOut();
 		display = Display.getDefault();
 		shell = new Shell(display);
 
@@ -231,8 +234,8 @@ public class Status {
 		txtCostPerKB.setTextLimit(6);
 		txtCostPerKB.setLayoutData(grdCost);
 
-		if (Main.costPerKB > -1)
-			txtCostPerKB.setText("" + Main.costPerKB);
+		if (SessionDetails.costPerKB > -1)
+			txtCostPerKB.setText("" + SessionDetails.costPerKB);
 		// txtCostPerKB end
 
 		lblCostTotalTitle = new Label(cmpCost, SWT.NONE);
@@ -294,8 +297,8 @@ public class Status {
 		txtNotifyCost.setTextLimit(6);
 		txtNotifyCost.setLayoutData(grdAlert2);
 
-		if (Main.notifyCost > -1)
-			txtNotifyCost.setText("" + Main.notifyCost);
+		if (SessionDetails.notifyCost > -1)
+			txtNotifyCost.setText("" + SessionDetails.notifyCost);
 		// txtNotifyCost end
 
 		lblNotifyKB = new Label(cmpNotify, SWT.NONE);
@@ -309,8 +312,8 @@ public class Status {
 		txtNotifyKB.setTextLimit(6);
 		txtNotifyKB.setLayoutData(grdAlert);
 
-		if (Main.notifyKB > -1)
-			txtNotifyKB.setText("" + Main.notifyKB);
+		if (SessionDetails.notifyKB > -1)
+			txtNotifyKB.setText("" + SessionDetails.notifyKB);
 		// txtNotifyKB end
 
 		lblNotifyKB3 = new Label(cmpNotify, SWT.NONE);
@@ -373,10 +376,10 @@ public class Status {
 	private void updateNotifyCost() {
 
 		try {
-			Main.notifyCost = (float) Float.parseFloat(txtNotifyCost.getText());
-			Main.notifiedCost = false;
+			SessionDetails.notifyCost = (float) Float.parseFloat(txtNotifyCost.getText());
+			SessionDetails.notifiedCost = false;
 		} catch (Exception ex) {
-			Main.notifyCost = -1;
+			SessionDetails.notifyCost = -1;
 		}
 
 	}
@@ -384,10 +387,10 @@ public class Status {
 	private void updateNotifyKB() {
 
 		try {
-			Main.notifyKB = Integer.parseInt(txtNotifyKB.getText());
-			Main.notifiedKB = false;
+			SessionDetails.notifyKB = Integer.parseInt(txtNotifyKB.getText());
+			SessionDetails.notifiedKB = false;
 		} catch (Exception ex) {
-			Main.notifyKB = -1;
+			SessionDetails.notifyKB = -1;
 		}
 
 	}
@@ -433,7 +436,7 @@ public class Status {
 	private void doExit() {
 		// save the costPerKB value so user doesn't have to re-enter it again
 		try {
-			Main.costPerKB = Float.parseFloat(txtCostPerKB.getText());
+			SessionDetails.costPerKB = Float.parseFloat(txtCostPerKB.getText());
 		} catch (Exception ex) {
 		}
 

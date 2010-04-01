@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import modal.SessionDetails;
+
 /**
  * Thread that accepts inbound traffic and directs it to the browser.
  * 
@@ -38,14 +40,14 @@ public class InboundTraffic extends Thread {
 			// connection.
 			while ((bufferLength = serverIS.read(buffer)) != CONNECTION_CLOSED) {
 				browserOS.write(buffer, 0, bufferLength);
-				Main.addBytesIn(bufferLength);
+				SessionDetails.addBytesIn(bufferLength);
 			}
 
 			isClosed = true;
-			Main.addEvent("Inbound connection closed");
+			SessionDetails.addEvent("Inbound connection closed");
 
 		} catch (Exception e) {
-			Main.addEvent("Inbound Exception: " + e);
+			SessionDetails.addEvent("Inbound Exception: " + e);
 		}
 	}
 }

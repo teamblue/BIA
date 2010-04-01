@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 import logic.HTTPHeader;
+import modal.SessionDetails;
 
 /**
  * Thread that sends outbound traffic from the browser to the net.
@@ -88,7 +89,7 @@ public class OutboundTraffic extends Thread {
 
 				if (existingServerSession == null) {
 					// Establish a new socket to the destination server.
-					Main.addEvent("New Host: " + host);
+					SessionDetails.addEvent("New Host: " + host);
 					existingServerSession = new Socket(host, 80);
 					serverSessions.add(existingServerSession);
 
@@ -99,19 +100,19 @@ public class OutboundTraffic extends Thread {
 									.getInputStream());
 					inboundTraffic.start();
 				} else {
-					Main.addEvent("Old Host: " + host);
+					SessionDetails.addEvent("Old Host: " + host);
 				}
 
 				// Send outbound traffic to the destination socket.
 				existingServerSession.getOutputStream().write(buffer, 0,
 						bufferLength);
-				Main.addBytesOut(bufferLength);
+				SessionDetails.addBytesOut(bufferLength);
 			}
 
-			Main.addEvent("Outbound connection closed");
+			SessionDetails.addEvent("Outbound connection closed");
 
 		} catch (Exception e) {
-			Main.addEvent("Outbound Exception: " + e);
+			SessionDetails.addEvent("Outbound Exception: " + e);
 		}
 	}
 }

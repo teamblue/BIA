@@ -1,6 +1,8 @@
 package gui;
 
 import logic.Main;
+import modal.SessionDetails;
+
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -30,7 +32,8 @@ public class DebugInfo {
 
 	private String[] events = null;
 
-	public DebugInfo(String[] events) {
+	public DebugInfo(SessionDetails sessionDetails) {
+		String[] events = sessionDetails.getEvents();
 		display = Display.getDefault();
 		shell = new Shell(display);
 
@@ -155,7 +158,7 @@ public class DebugInfo {
 		btnClear.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent arg0) {
 				lstList.removeAll();
-				Main.emptyEventsArray();
+				SessionDetails.emptyEventsArray();
 			}
 		});
 	}
