@@ -32,8 +32,8 @@ public class DebugInfo {
 
 	private String[] events = null;
 
-	public DebugInfo(SessionDetails sessionDetails) {
-		String[] events = sessionDetails.getEvents();
+	public DebugInfo() {
+		String[] events = SessionDetails.getEvents();
 		display = Display.getDefault();
 		shell = new Shell(display);
 

@@ -1,16 +1,12 @@
 package modal;
 
 import gui.DebugInfo;
+import gui.General;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import logic.Main;
-
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 
 public class SessionDetails {
 	private static final int EVENTS_SIZE = 100;
@@ -30,29 +26,16 @@ public class SessionDetails {
 	public static boolean notifiedCost;
 	public static boolean notifiedKB;
 	
-	public String[] getEvents() {
+	public static String[] getEvents() {
 		return events;
 	}
 	
-	public long getTotalBytesIn() {
+	public static long getTotalBytesIn() {
 		return totalBytesIn;
 	}
 	
-	public long getTotalBytesOut() {
+	public static long getTotalBytesOut() {
 		return totalBytesOut;
-	}
-	
-	private static void displayNotification(String message) {
-		Display display = new Display();
-		Shell shell = new Shell(display);
-
-		// SYSTEM_MODAL forces it to the top
-		MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK
-				| SWT.SYSTEM_MODAL);
-		messageBox.setText(Main.PROG_NAME);
-		messageBox.setMessage(message);
-		messageBox.open();
-
 	}
 	
 	public static void emptyEventsArray() {
@@ -78,7 +61,7 @@ public class SessionDetails {
 					notifiedKB = true;
 					addEvent("User notification: bandwidth limit of "
 							+ notifyKB + " KB reached");
-					displayNotification("Bandwidth limit of " + notifyKB
+					General.displayNotification("Bandwidth limit of " + notifyKB
 							+ " KB reached");
 				}
 			}
@@ -90,7 +73,7 @@ public class SessionDetails {
 					notifiedCost = true;
 					addEvent("User notification: cost limit of $" + notifyCost
 							+ " reached");
-					displayNotification("Cost limit of $" + notifyCost
+					General.displayNotification("Cost limit of $" + notifyCost
 							+ " reached");
 				}
 			}

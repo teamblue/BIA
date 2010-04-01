@@ -68,9 +68,9 @@ public class Status {
 
 	private final Font SUBTITLE = new Font(display, "Arial", 9, SWT.BOLD);
 
-	public Status(SessionDetails sessionDetails) {
-		long bytesIn = sessionDetails.getTotalBytesIn();
-		long bytesOut = sessionDetails.getTotalBytesOut();
+	public Status() {
+		long bytesIn = SessionDetails.getTotalBytesIn();
+		long bytesOut = SessionDetails.getTotalBytesOut();
 		display = Display.getDefault();
 		shell = new Shell(display);
 
