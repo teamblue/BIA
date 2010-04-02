@@ -82,11 +82,9 @@ public class General {
 					image.dispose();
 					display.dispose();
 					shell.dispose();
-					SessionDetails.addEvent("Exiting");
-					System.exit(0);
 				}
 			});
-
+			
 			// icon right-click
 			trayItem.addListener(SWT.MenuDetect, new Listener() {
 				public void handleEvent(Event event) {
@@ -110,10 +108,5 @@ public class General {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
-
-		image.dispose();
-		display.dispose();
-		shell.dispose();
-		System.exit(0);
 	}
 }
