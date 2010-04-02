@@ -6,11 +6,6 @@ public class Request implements bluetooth.BluetoothRequest
 	{
 	}
 	
-	/*public void dataReceived(byte[] data, int bytes) 
-	{
-		System.out.println( "Data received." );
-	}*/
-	
 	public byte[] dataRequested(byte[] data, int bytes)
 	{
 		System.out.println( "Data requested" );
