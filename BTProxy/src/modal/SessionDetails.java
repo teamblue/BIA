@@ -3,6 +3,7 @@ package modal;
 import gui.DebugInfo;
 import gui.General;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.eclipse.swt.widgets.Display;
@@ -100,10 +101,11 @@ public class SessionDetails {
 			if (notifyCost > -1) {
 				if (totalKB * costPerKB >= notifyCost) {
 					notifiedCost = true;
-					addEvent("User notification: cost limit of $" + notifyCost
-							+ " reached");
-					General.displayNotification("Cost limit of $" + notifyCost
-							+ " reached");
+					String msg = "Cost limit of $" +
+							(new DecimalFormat("0.00")).format(notifyCost) +
+							" reached.";
+					addEvent("User notification: " + msg);
+					General.displayNotification(msg);
 				}
 			}
 		}
