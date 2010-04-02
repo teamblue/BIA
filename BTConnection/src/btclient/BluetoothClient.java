@@ -93,7 +93,7 @@ public class BluetoothClient {
 	 * @param uuid
 	 * @throws BluetoothStateException
 	 */
-	public void discoverDevicesAndServices( String uuid ) throws BluetoothStateException
+	private void discoverDevicesAndServices( String uuid ) throws BluetoothStateException
 	{
 		discoverer.discoverDevices();
 		discoverer.discoverServices( uuid );
