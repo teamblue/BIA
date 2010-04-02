@@ -3,6 +3,8 @@ package gui;
 import javax.swing.JOptionPane;
 
 import logic.Main;
+import modal.SessionDetails;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.graphics.Image;
@@ -80,7 +82,7 @@ public class General {
 					image.dispose();
 					display.dispose();
 					shell.dispose();
-					System.out.println("Program Ended");/* This and the System.exit should only happen from the main*/
+					SessionDetails.addEvent("Exiting");
 					System.exit(0);
 				}
 			});
