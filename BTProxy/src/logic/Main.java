@@ -12,13 +12,36 @@ import modal.SessionDetails;
 
 public class Main {
 	public static final String PROG_NAME = "Bluetooth Internet Adapter";
-
+	public static final int PORT_NUM = 3128;
+	
 	public static void main(String[] args) {
-		final int PORT_NUM = 3128;
+		SessionDetails.addEvent("Program started");
+		run();
+		SessionDetails.addEvent("Program Actually Ended");
+	}
+	
+	public static void run(){
 		
+		// Maybe this should be Proxy.start();
+		startProxy(); /* Runs in Seperate Thread */
+		
+		// Maybe this should be GUI.run();
+		runGUI();
+	}
+	
+	public static void runGUI(){
+		try {
+			General.setupTrayIcon();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void startProxy(){
 		new Thread(new Runnable() {
 			public void run() {
 				ServerSocket browser;
+				/* BTDevice phone*/
 				try {
 					browser = new ServerSocket(PORT_NUM);
 				
@@ -31,7 +54,7 @@ public class Main {
 						Socket browserSession = browser.accept();
 						SessionDetails.addEvent("Accepted browser connection");
 						OutboundTraffic outboundTraffic = new OutboundTraffic(
-							browserSession);
+							browserSession/*, phone*/);
 						outboundTraffic.start();
 					}
 				} catch (IOException e) {
@@ -40,13 +63,6 @@ public class Main {
 				}
 			}
 		}).start();
-		
-		SessionDetails.addEvent("Program started");
-		try {
-			General.setupTrayIcon();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		SessionDetails.addEvent("Program Actually Ended");
 	}
+
 }
