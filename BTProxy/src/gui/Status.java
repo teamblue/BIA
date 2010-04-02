@@ -1,5 +1,8 @@
 package gui;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+
 import modal.SessionDetails;
 import modal.SessionDetails.DataUnit;
 import org.eclipse.swt.events.ModifyEvent;
@@ -59,8 +62,13 @@ public class Status {
 	private Text txtNotifyKB;
 
 	private final Font SUBTITLE = new Font(display, "Arial", 9, SWT.BOLD);
+	private DecimalFormat numberFormat;
 
 	public Status() {
+		// Setup the number format.
+		numberFormat = new DecimalFormat("0.00");
+		numberFormat.setNegativePrefix("");
+		
 		createWindow();
 		runWindow();
 	}
@@ -335,13 +343,11 @@ public class Status {
 	}
 
 	private void updateCost() {
-		float cost;
 		try {
 			float dataTotal = SessionDetails.getTotal(SessionDetails.DataUnit.KB);
-			cost = (float) ((dataTotal / 1024.0) * Float
-					.parseFloat(txtCostPerKB.getText()));
-			cost = (float) (Math.round(cost * 1000.0) / 1000.0);
-			lblCostTotalNum.setText("" + cost);
+			float cost = dataTotal * SessionDetails.costPerKB;
+			String costText = numberFormat.format(cost);
+			lblCostTotalNum.setText(costText);
 		} catch (Exception ex) {
 			lblCostTotalNum.setText("N/A");
 		}
@@ -367,9 +373,15 @@ public class Status {
 	}
 	
 	public void updateWindow() {
-		lblDataInNum.setText("" + SessionDetails.getTotalIn(unit));
-		lblDataOutNum.setText("" + SessionDetails.getTotalOut(unit));
-		lblDataTotalNum.setText("" + SessionDetails.getTotal(unit));
+		// Format the data statistics.
+		String in = numberFormat.format(SessionDetails.getTotalIn(unit));
+		String out = numberFormat.format(SessionDetails.getTotalOut(unit));
+		String total = numberFormat.format(SessionDetails.getTotal(unit));
+		
+		// Update the label text.
+		lblDataInNum.setText(in);
+		lblDataOutNum.setText(out);
+		lblDataTotalNum.setText(total);
 		
 		// Resize labels so that their text is all visible... AND NOTHING MORE >:-)
 		lblDataInNum.pack();
