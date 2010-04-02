@@ -3,7 +3,8 @@ package tests;
 import java.io.IOException;
 import java.net.Socket;
 
-import app.Connection;
+import nandos_first_attempt.Connection;
+
 import junit.framework.TestCase;
 
 public class ConnectionTests extends TestCase {

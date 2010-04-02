@@ -1,4 +1,4 @@
-package app;
+package nandos_first_attempt;
 enum HTTPType
 {
 	GET,

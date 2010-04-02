@@ -1,4 +1,4 @@
-package app;
+package nandos_first_attempt;
 import java.io.*;
 import java.net.*;
 

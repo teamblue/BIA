@@ -1,0 +1,7 @@
+*.swp
+*.swo
+*.class
+bin
+*.mtj.tmp
+.metadata/*
+.DS_Store

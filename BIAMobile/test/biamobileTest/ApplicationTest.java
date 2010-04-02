@@ -1,18 +1,16 @@
 package biamobileTest;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.IOException;
 
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Form;
-import javax.microedition.lcdui.StringItem;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
+import biamobile.DesktopRequestHandler;
 import biamobile.MobileDesktopHandler;
-import biamobile.RemoteConnectionHandler;
 
 /**
  * Tests out the full mobile application by attempting to send a request to the application, and waits for
@@ -28,21 +26,29 @@ public class ApplicationTest extends MIDlet implements CommandListener
 	
 	private void testRequestResponse()
 	{
-		MobileDesktopHandler mdh = new MobileDesktopHandler();
+		DesktopRequestHandler drh = new DesktopRequestHandler();
 		
-		byte[] response;
+		byte[] response = null;
 		
-		response = mdh.sendRequest(MobileTestConstants.getRequestMessage().getBytes());
+		try
+		{
+			response = drh.sendRequest(MobileTestConstants.getTCPRequestMessage().getBytes());
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		String responseStr = new String(response);
 		
-		if (responseStr.equals(MobileTestConstants.getRequestMessage()))
+		if (responseStr.equals(MobileTestConstants.getTCPRequestMessage()))
 		{
-			mMainForm.append("Passed...");
+			System.out.println("Passed...");
 		}
 		else
 		{
-			mMainForm.append("Failed...");
+			System.out.println("Failed...");
 		}
 		
 	}
@@ -67,7 +73,7 @@ public class ApplicationTest extends MIDlet implements CommandListener
 		
 		testRequestResponse();
 	}
-	
+
 	public void commandAction(Command c, Displayable s)
 	{
 		notifyDestroyed();
