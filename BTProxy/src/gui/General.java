@@ -1,7 +1,10 @@
 package gui;
 
+import javax.swing.JOptionPane;
+
 import logic.Main;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -15,15 +18,24 @@ import org.eclipse.swt.widgets.TrayItem;
 
 public class General {
 	public static void displayNotification(String message) {
-		Display display = new Display();
-		Shell shell = new Shell(display);
-
-		// SYSTEM_MODAL forces it to the top
-		MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK
-				| SWT.SYSTEM_MODAL);
-		messageBox.setText(Main.PROG_NAME);
-		messageBox.setMessage(message);
-		messageBox.open();
+		try {
+			// Try displaying the message with SWT, which uses the native look
+			// and feel of the OS. 
+			
+			Display display = new Display();
+			Shell shell = new Shell(display);
+	
+			// SYSTEM_MODAL forces it to the top
+			MessageBox messageBox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK
+					| SWT.SYSTEM_MODAL);
+			messageBox.setText(Main.PROG_NAME);
+			messageBox.setMessage(message);
+			messageBox.open();
+		} catch (SWTError e) {
+			// In Linux, SWT doesn't implement MessageBox, so use JOptionPane.
+			JOptionPane.showMessageDialog(null, message, Main.PROG_NAME,
+					JOptionPane.WARNING_MESSAGE);
+		}
 	}
 	
 	public static void setupTrayIcon() throws Exception {

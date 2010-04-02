@@ -3,9 +3,9 @@ package modal;
 import gui.DebugInfo;
 import gui.General;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import org.eclipse.swt.widgets.Display;
 
 public class SessionDetails {
@@ -26,17 +26,45 @@ public class SessionDetails {
 	public static boolean notifiedCost;
 	public static boolean notifiedKB;
 	
-	
 	public static String[] getEvents() {
 		return events;
 	}
 	
-	public static long getTotalBytesIn() {
-		return totalBytesIn;
+	public static enum DataUnit {b, B, Kb, KB, Mb, MB};
+	
+	public static float getTotalIn(DataUnit unit) {
+		return convertBytesTo(totalBytesIn, unit);
 	}
 	
-	public static long getTotalBytesOut() {
-		return totalBytesOut;
+	public static float getTotalOut(DataUnit unit) {
+		return convertBytesTo(totalBytesOut, unit);
+	}
+	
+	public static float getTotal(DataUnit unit) {
+		return getTotalIn(unit) + getTotalOut(unit);
+	}
+	
+	private static float convertBytesTo(long bytes, DataUnit unit) {
+		float dataIn = bytes;
+
+		if (unit == DataUnit.b || unit == DataUnit.Kb || unit == DataUnit.Mb) {
+			dataIn *= 8;
+		}
+
+		int denominator;
+		
+		if (unit == DataUnit.Kb || unit == DataUnit.KB)
+			denominator = 1024;
+		else if (unit == DataUnit.Mb || unit == DataUnit.MB)
+			denominator = 1048576;
+		else
+			denominator = 1;
+
+		if (denominator > 1) {
+			dataIn = (float) (Math.round((dataIn / denominator) * 100.0) / 100.0);
+		}
+		
+		return dataIn;
 	}
 	
 	public static void emptyEventsArray() {
@@ -54,9 +82,9 @@ public class SessionDetails {
 	}
 	
 	private static void checkNotify() {
-		float totalKB = (float) ((totalBytesIn + totalBytesOut) / 1024.0);
+		float totalKB = getTotal(DataUnit.KB);
 
-		if (notifiedKB == false) {
+		if (!notifiedKB) {
 			if (notifyKB > -1) {
 				if (totalKB >= notifyKB) {
 					notifiedKB = true;
@@ -68,14 +96,16 @@ public class SessionDetails {
 			}
 		}
 
-		if (notifiedCost == false) {
+		System.out.println(notifiedCost);
+		if (!notifiedCost) {
 			if (notifyCost > -1) {
-				if ((totalKB * costPerKB) >= notifyCost) {
+				if (totalKB * costPerKB >= notifyCost) {
 					notifiedCost = true;
-					addEvent("User notification: cost limit of $" + notifyCost
-							+ " reached");
-					General.displayNotification("Cost limit of $" + notifyCost
-							+ " reached");
+					String msg = "Cost limit of $" +
+							(new DecimalFormat("0.00")).format(notifyCost) +
+							" reached.";
+					addEvent("User notification: " + msg);
+					General.displayNotification(msg);
 				}
 			}
 		}

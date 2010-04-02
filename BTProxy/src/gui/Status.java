@@ -1,7 +1,10 @@
 package gui;
 
-import modal.SessionDetails;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
+import modal.SessionDetails;
+import modal.SessionDetails.DataUnit;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -9,12 +12,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
-
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-
 import org.eclipse.swt.SWT;
-
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -26,15 +26,15 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 public class Status {
-
 	private Shell shell;
-	private Display display;
+	private Display display = Display.getDefault();
 	private Composite cmpNotify;
 	private Composite cmpBandwidth;
 	private Composite cmpCost;
 	private Composite cmpMain;
 
 	private Combo cboUnits;
+	private SessionDetails.DataUnit unit;
 
 	private Label lblBandwidthTitle;
 	private Label lblCostPerKB;
@@ -51,10 +51,6 @@ public class Status {
 
 	private Text txtCostPerKB;
 
-	private long bytesIn = 0;
-	private long bytesOut = 0;
-	private long bytesTotal;
-
 	private Label lblNotifyTitle;
 	private Label lblNotifyDesc;
 	private Label lblNotifyCost;
@@ -66,17 +62,13 @@ public class Status {
 	private Text txtNotifyKB;
 
 	private final Font SUBTITLE = new Font(display, "Arial", 9, SWT.BOLD);
+	private DecimalFormat numberFormat;
 
 	public Status() {
-		long bytesIn = SessionDetails.getTotalBytesIn();
-		long bytesOut = SessionDetails.getTotalBytesOut();
-		display = Display.getDefault();
-		shell = new Shell(display);
-
-		this.bytesIn = bytesIn;
-		this.bytesOut = bytesOut;
-		this.bytesTotal = bytesIn + bytesOut;
-
+		// Setup the number format.
+		numberFormat = new DecimalFormat("0.00");
+		numberFormat.setNegativePrefix("");
+		
 		createWindow();
 		runWindow();
 	}
@@ -85,6 +77,8 @@ public class Status {
 		shell.open();
 
 		while (!shell.isDisposed()) {
+			updateWindow();
+			
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
@@ -149,7 +143,6 @@ public class Status {
 
 	//Create bandwidth composite
 	private void createCmpBandwidth() {
-
 		GridLayout grlBandwidth = new GridLayout();
 		grlBandwidth.numColumns = 2;
 
@@ -172,7 +165,6 @@ public class Status {
 		lblUnits = new Label(cmpBandwidth, SWT.NONE);
 		lblUnits.setText("Unit:");
 
-		// cboUnits start
 		cboUnits = new Combo(cmpBandwidth, SWT.DROP_DOWN | SWT.READ_ONLY);
 		cboUnits.add("b");
 		cboUnits.add("B");
@@ -181,31 +173,23 @@ public class Status {
 		cboUnits.add("Mb");
 		cboUnits.add("MB");
 		cboUnits.setText("B");
-		// cboUnits end
+		updateUnits();
 
 		lblDataInTitle = new Label(cmpBandwidth, SWT.NONE);
 		lblDataInTitle.setText("Data In:");
-
 		lblDataInNum = new Label(cmpBandwidth, SWT.NONE);
-		lblDataInNum.setText("" + bytesIn);
 
 		lblDataOutTitle = new Label(cmpBandwidth, SWT.NONE);
 		lblDataOutTitle.setText("Data Out:");
-
 		lblDataOutNum = new Label(cmpBandwidth, SWT.NONE);
-		lblDataOutNum.setText("" + bytesOut);
 
 		lblDataTotalTitle = new Label(cmpBandwidth, SWT.NONE);
 		lblDataTotalTitle.setText("Data Total:");
-
 		lblDataTotalNum = new Label(cmpBandwidth, SWT.NONE);
-		lblDataTotalNum.setText("" + bytesTotal);
-
 	}
 
-	//Create main composite
+	//Create cost composite
 	private void createCmpCost() {
-
 		GridLayout grlCost = new GridLayout();
 		grlCost.numColumns = 2;
 
@@ -244,8 +228,6 @@ public class Status {
 		lblCostTotalTitle.setText("Usage Cost:  $");
 
 		lblCostTotalNum = new Label(cmpCost, SWT.NONE);
-
-		updateCost();
 	}
 
 	private void createcmpNotify() {
@@ -324,18 +306,11 @@ public class Status {
 	}
 
 	private void addListeners() {
-		// 'X' button listener
-		shell.addListener(SWT.Close, new Listener() {
-			public void handleEvent(Event e) {
-				e.doit = false;
-				doExit();
-			}
-		});
-
 		// cboUnits selection listener
 		cboUnits.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				changeUnits(cboUnits.getText());
+				updateUnits();
+				updateWindow();
 			}
 		});
 
@@ -343,6 +318,12 @@ public class Status {
 		txtCostPerKB.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				updateCost();
+				
+				// save the costPerKB value so user doesn't have to re-enter it again
+				try {
+					SessionDetails.costPerKB = Float.parseFloat(txtCostPerKB.getText());
+				} catch (Exception ex) {
+				}
 			}
 		});
 
@@ -359,67 +340,54 @@ public class Status {
 				SessionDetails.updateNotifyKB(txtNotifyKB.getText());
 			}
 		});
-
 	}
 
 	private void updateCost() {
-		float cost;
 		try {
-			cost = (float) ((bytesTotal / 1024.0) * Float
-					.parseFloat(txtCostPerKB.getText()));
-			cost = (float) (Math.round(cost * 1000.0) / 1000.0);
-			lblCostTotalNum.setText("" + cost);
+			float dataTotal = SessionDetails.getTotal(SessionDetails.DataUnit.KB);
+			float cost = dataTotal * SessionDetails.costPerKB;
+			String costText = numberFormat.format(cost);
+			lblCostTotalNum.setText(costText);
 		} catch (Exception ex) {
 			lblCostTotalNum.setText("N/A");
 		}
 		lblCostTotalNum.pack();
 	}
 
-	private void changeUnits(String newUnit) {
-		int denominator;
-
-		float dataIn;
-		float dataOut;
-		float dataTotal;
-
-		dataIn = bytesIn;
-		dataOut = bytesOut;
-		dataTotal = bytesTotal;
-
-		if (newUnit.contains("b")) {
-			dataIn = (dataIn * 8);
-			dataOut = (dataOut * 8);
-			dataTotal = (dataTotal * 8);
+	private void updateUnits() {
+		String unitText = cboUnits.getText();
+		
+		if (unitText.equals("b")) {
+			unit = DataUnit.b;
+		} else if (unitText.equals("B")) {
+			unit = DataUnit.B;
+		} else if (unitText.equals("Kb")) {
+			unit = DataUnit.Kb;
+		} else if (unitText.equals("KB")) {
+			unit = DataUnit.KB;
+		} else if (unitText.equals("Mb")) {
+			unit = DataUnit.Mb;
+		} else if (unitText.equals("MB")) {
+			unit = DataUnit.MB;
 		}
-
-		if (newUnit.equals("Kb") || newUnit.equals("KB"))
-			denominator = 1024;
-		else if (newUnit.equals("Mb") || newUnit.equals("MB"))
-			denominator = 1048576;
-		else
-			denominator = 1;
-
-		if (denominator > 1) {
-			dataIn = (float) (Math.round((dataIn / denominator) * 100.0) / 100.0);
-			dataOut = (float) (Math.round((dataOut / denominator) * 100.0) / 100.0);
-			dataTotal = (float) (Math.round((dataTotal / denominator) * 100.0) / 100.0);
-		}
-
-		lblDataInNum.setText("" + dataIn);
-		lblDataOutNum.setText("" + dataOut);
-		lblDataTotalNum.setText("" + dataTotal);
+	}
+	
+	public void updateWindow() {
+		// Format the data statistics.
+		String in = numberFormat.format(SessionDetails.getTotalIn(unit));
+		String out = numberFormat.format(SessionDetails.getTotalOut(unit));
+		String total = numberFormat.format(SessionDetails.getTotal(unit));
+		
+		// Update the label text.
+		lblDataInNum.setText(in);
+		lblDataOutNum.setText(out);
+		lblDataTotalNum.setText(total);
+		
+		// Resize labels so that their text is all visible... AND NOTHING MORE >:-)
 		lblDataInNum.pack();
 		lblDataOutNum.pack();
 		lblDataTotalNum.pack();
-	}
-
-	private void doExit() {
-		// save the costPerKB value so user doesn't have to re-enter it again
-		try {
-			SessionDetails.costPerKB = Float.parseFloat(txtCostPerKB.getText());
-		} catch (Exception ex) {
-		}
-
-		shell.dispose();
+		
+		updateCost();
 	}
 }
