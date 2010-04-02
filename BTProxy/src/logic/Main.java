@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.TrayItem;
 
 public class Main {
 	public static final String PROG_NAME = "Bluetooth Internet Adapter";
-	private static SessionDetails sessionDetails = new SessionDetails();
 
 	public static void main(String[] args) {
 		final int PORT_NUM = 3128;
@@ -36,14 +35,14 @@ public class Main {
 				try {
 					browser = new ServerSocket(PORT_NUM);
 				
-					sessionDetails.addEvent("Server socket bound to port " + PORT_NUM);
+					SessionDetails.addEvent("Server socket bound to port " + PORT_NUM);
 
 					// Provide a socket for each proxy request from the browser.
 					// Firefox, among other modern browsers, establish multiple sockets
 					// at a time.
 					while (true) {
 						Socket browserSession = browser.accept();
-						sessionDetails.addEvent("Accepted browser connection");
+						SessionDetails.addEvent("Accepted browser connection");
 						OutboundTraffic outboundTraffic = new OutboundTraffic(
 							browserSession);
 						outboundTraffic.start();
@@ -55,12 +54,12 @@ public class Main {
 			}
 		}).start();
 		
-		sessionDetails.addEvent("Program started");
+		SessionDetails.addEvent("Program started");
 		try {
 			General.setupTrayIcon();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		sessionDetails.addEvent("Program Actually Ended");
+		SessionDetails.addEvent("Program Actually Ended");
 	}
 }
