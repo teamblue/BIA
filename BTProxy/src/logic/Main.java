@@ -3,6 +3,8 @@ package logic;
 import gui.DebugInfo;
 import gui.General;
 import gui.Status;
+
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import modal.SessionDetails;
@@ -27,35 +29,38 @@ public class Main {
 
 	public static void main(String[] args) {
 		final int PORT_NUM = 3128;
-
-		sessionDetails.addEvent("Program started");
-
+		
 		new Thread(new Runnable() {
 			public void run() {
+				ServerSocket browser;
 				try {
-					General.setupTrayIcon();
-				} catch (Exception e) {
+					browser = new ServerSocket(PORT_NUM);
+				
+					sessionDetails.addEvent("Server socket bound to port " + PORT_NUM);
+
+					// Provide a socket for each proxy request from the browser.
+					// Firefox, among other modern browsers, establish multiple sockets
+					// at a time.
+					while (true) {
+						Socket browserSession = browser.accept();
+						sessionDetails.addEvent("Accepted browser connection");
+						OutboundTraffic outboundTraffic = new OutboundTraffic(
+							browserSession);
+						outboundTraffic.start();
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}).start();
-
+		
+		sessionDetails.addEvent("Program started");
 		try {
-			ServerSocket browser = new ServerSocket(PORT_NUM);
-			sessionDetails.addEvent("Server socket bound to port " + PORT_NUM);
-
-			// Provide a socket for each proxy request from the browser.
-			// Firefox, among other modern browsers, establish multiple sockets
-			// at a time.
-			while (true) {
-				Socket browserSession = browser.accept();
-				sessionDetails.addEvent("Accepted browser connection");
-				OutboundTraffic outboundTraffic = new OutboundTraffic(
-						browserSession);
-				outboundTraffic.start();
-			}
+			General.setupTrayIcon();
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
+		sessionDetails.addEvent("Program Actually Ended");
 	}
 }

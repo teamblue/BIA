@@ -80,6 +80,7 @@ public class General {
 					image.dispose();
 					display.dispose();
 					shell.dispose();
+					System.out.println("Program Ended");/* This and the System.exit should only happen from the main*/
 					System.exit(0);
 				}
 			});
