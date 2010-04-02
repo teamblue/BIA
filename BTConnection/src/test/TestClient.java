@@ -14,23 +14,21 @@ package test;
 // Setup a new Java Application and under 'Arguments' add '-Dbluecove.stack=emulator' to 'VM arguments'
 
 import java.io.IOException;
-import java.util.Collection;
 
 import javax.bluetooth.BluetoothStateException;
 
-public class TestClient {
-	private static final String UUID = "E6FEC3B275744C079B2F8883DBE38937";
-	
+import btclient.BluetoothClient;
+
+public class TestClient {	
 	public static void main( String args[] )
 	{
-		bluetooth.BluetoothDevices devices;
-		Collection<bluetooth.BluetoothDevice> deviceCollection;
+		BluetoothClient client;
 		
 		System.out.println( "Starting client test.\nDiscovering devices and services..." );
 		
 		try
 		{
-			devices = new bluetooth.BluetoothDevices();
+			client = new BluetoothClient();
 		}
 		catch ( BluetoothStateException e )
 		{
@@ -41,7 +39,7 @@ public class TestClient {
 		
 		try
 		{
-			devices.discoverDevicesAndServices( UUID );
+			client.getBTConnection();
 		}
 		catch ( BluetoothStateException e )
 		{
@@ -50,40 +48,36 @@ public class TestClient {
 		
 		System.out.println( "Done discovery" );
 		
-		deviceCollection = devices.getDevicesCollection();
-		
-		for ( bluetooth.BluetoothDevice device : deviceCollection )
-		{
-			System.out.println( "Device " + device.name() + " at address " + device.address() );
-			String requests[] = {"umanitoba.ca", "google.com"};
+		String requests[] = {"umanitoba.ca", "google.com"};
 				
-			for ( String request : requests )
+		for ( String request : requests )
+		{
+			System.out.println("Sending request: " + request );
+			
+			byte[] response = null;
+			
+			try
 			{
-				System.out.println("Sending request: " + request );
-					
-				byte[] response = null;
-					
-				try
-				{
-					response = device.request( request.getBytes() );
+				response = client.request( request.getBytes() );
+			}
+			catch ( IOException e )
+			{
+				System.out.println( "Error with request" );
+			}
+			
+			if ( response != null )
+			{
+				int bytes=0;
+				while(response[bytes] != 0){
+					bytes++;
 				}
-				catch ( IOException e )
-				{
-					System.out.println( "Error with request" );
-				}
-					
-				if ( response != null )
-				{
-					int bytes=0;
-					while(response[bytes] != 0){
-						bytes++;
-					}
-					String result = new String(response, 0, bytes);
-		
-					System.out.println("Recieved: " + result);
-				}
+				String result = new String(response, 0, bytes);
+
+				System.out.println("Recieved: " + result);
 			}
 		}
+		
+		
 		System.out.println( "Done testing client." );
 	}
 }
