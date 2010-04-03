@@ -3,6 +3,8 @@ package biamobileTest;
 import java.io.IOException;
 import java.util.Hashtable;
 
+import javax.microedition.io.HttpConnection;
+
 import jmunit.framework.cldc11.TestCase;
 import biamobile.RemoteConnectionHandler;
 
@@ -36,13 +38,14 @@ public class TestRemoteConnectionHandler extends TestCase
 		
 		catch(IOException e)
 		{
+			System.out.println("IOException:");
+			e.printStackTrace();
 			fail(e.getMessage());
 		}
 		
 		if (response != null)
 		{
 			String respStr = new String(response);
-			System.out.print("\nResponse:" + respStr);
 			assertTrue(respStr.equals(MobileTestConstants.getExpectedResponse()));
 		}
 		
@@ -60,19 +63,20 @@ public class TestRemoteConnectionHandler extends TestCase
 		
 		try
 		{
-			response = rch.performConnectHTTP("GET", new Hashtable(), MobileTestConstants.getTestServerHostName(),
+			response = rch.performConnectHTTP(HttpConnection.GET, new Hashtable(), MobileTestConstants.getTestServerHostName(),
 				MobileTestConstants.getServerPort(), MobileTestConstants.getHTTPRequestMessage().getBytes());
 		}
 		
 		catch(IOException e)
 		{
+			System.out.println("IOException:");
+			e.printStackTrace();
 			fail(e.getMessage());
 		}
 		
 		if (response != null)
 		{
 			String respStr = new String(response);
-			System.out.print("\nResponse:" + respStr);
 			assertTrue(respStr.equals(MobileTestConstants.getExpectedResponse()));
 		}
 		
@@ -100,7 +104,7 @@ public class TestRemoteConnectionHandler extends TestCase
 				performConnectTCP1Test();
 				break;
 			case 1:
-				//performConnectHTTP1Test();
+				performConnectHTTP1Test();
 				break;
 		}
 	}

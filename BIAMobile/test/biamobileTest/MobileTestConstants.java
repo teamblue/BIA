@@ -49,6 +49,9 @@ public class MobileTestConstants
 	
 	public static String getHTTPRequestMessage()
 	{
+		//The HttpConnection object uses HTTP 1.1 (not 1.0), and there's nothing we can do to change this,
+		//so we need a separate request message for http (since TestServer compares the actual request with
+		//this message)
 		String message =
 			"GET / HTTP/1.1" + getHTTPNewline() +
 			"Content-Length: 0" + getHTTPNewline() +

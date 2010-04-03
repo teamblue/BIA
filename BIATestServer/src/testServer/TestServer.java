@@ -18,26 +18,7 @@ import java.net.Socket;
  *
  */
 public class TestServer
-{	
-	/*private static String getHTTPNewline()
-	{
-		return biamobileTest.MobileTestConstants.getHTTPNewline();
-	}
-	
-	private static int getServerPort()
-	{
-		return biamobileTest.MobileTestConstants.getServerPort();
-	}
-	
-	public static String getRequestMessage()
-	{
-		return biamobileTest.MobileTestConstants.getRequestMessage();
-	}
-	
-	public static String getExpectedResponse()
-	{
-		return biamobileTest.MobileTestConstants.getExpectedResponse();
-	}*/
+{
 	
 	private static String readRequest(BufferedReader br) throws IOException
 	{
@@ -61,7 +42,6 @@ public class TestServer
 		ServerSocket server = null;
 		
 		String request = ""; //biamobileTest.MobileTestConstants.getTCPRequestMessage();
-		String response = ""; //biamobileTest.MobileTestConstants.getExpectedTCPResponse();
 		
 		while (true)
 		{
@@ -94,6 +74,7 @@ public class TestServer
 		        
 		        else
 		        {
+		            System.out.println("Request is incorrect");
 		            bw.write("error");
 		            bw.write(biamobileTest.MobileTestConstants.getHTTPNewline() + biamobileTest.MobileTestConstants.getHTTPNewline());
 		        }
