@@ -1,5 +1,7 @@
 package biamobile;
 
+import java.util.Hashtable;
+
 /**
  * Provides a "View" over a byte array to interpret it as HTTP data.
  * @author aaron
@@ -27,6 +29,9 @@ public class RequestHTTPView
 	
 	// pull out remote host, remote port, etc from request
 	// make a byte array containing the request data to be sent
+	// that is, takes a request like "GET http://www.remotehost.com:888 HTTP/1.0", extracts out the www.remotehost.com
+	//		the port number, stores these values in the class variables
+	//		and stores the stripped command "GET / HTTP/1.0" in the requestData byte array.
 	private void extractRequestData()
 	{
 		String getSection = null;
@@ -142,21 +147,55 @@ public class RequestHTTPView
 		}
 	}
 	
+	// TODO
+	/**
+	 * @return  Returns a hash table containing all the headers (used for the HTTP request) in the form of key:value.
+	 */
+	public Hashtable getHeadersHash()
+	{
+		// note:  this.rawData contains a byte array of all the raw data
+		
+		return null; 
+	}
+	
+	// TODO
+	/**
+	 * @return  A byte array containing all the data after the headers.  That is all the data after the /r/n/r/n in the HTTP request.
+	 * 				This is used for the HTTP connection.
+	 */
+	public byte[] getDataAfterHeaders()
+	{
+		return null;
+	}
+	
+	/**
+	 * @return  The remote host contained in the "GET http://remotehost.com" section of the passed byte array.
+	 */
 	public String getRemoteHost()
 	{
 		return remoteHost;
 	}
 	
+	/**
+	 * @return  The request data (that is, the byte array, but with the "GET http://remotehost.com" stripped down to "GET /"
+	 * 	so it can be used to send out to a web server as a request)
+	 */
 	public byte[] getRequestData()
 	{
 		return requestData;
 	}
 	
+	/**
+	 * @return  The raw, untouched byte array.
+	 */
 	public byte[] getRawData()
 	{
 		return this.rawData;
 	}
 
+	/**
+	 * @return  The remote port, as in "GET http://remotehost.com:88"
+	 */
 	public int getRemotePort()
 	{
 		return remotePort;
