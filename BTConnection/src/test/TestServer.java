@@ -13,12 +13,13 @@ package test;
 // Go to 'Run As' > 'Run Configurations...'
 // Setup a new Java Application and under 'Arguments' add '-Dbluecove.stack=emulator' to 'VM arguments'
 
-public class TestServer 
+public class TestServer
 {
-	// The starting point
-	public static void main(String arg[]) throws Exception 
-	{
-		btserver.BluetoothHost btHost = new btserver.BluetoothHost( new Request() );
-		btHost.acceptConnections();
-	}
+  // The starting point
+  public static void main(String arg[]) throws Exception
+  {
+    btserver.BluetoothHost btHost = new btserver.BluetoothHost( new Request() );    
+    
+    btHost.acceptConnections();
+  }
 }

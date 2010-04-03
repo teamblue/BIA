@@ -19,65 +19,69 @@ import javax.bluetooth.BluetoothStateException;
 
 import btclient.BluetoothClient;
 
-public class TestClient {	
-	public static void main( String args[] )
-	{
-		BluetoothClient client;
-		
-		System.out.println( "Starting client test.\nDiscovering devices and services..." );
-		
-		try
-		{
-			client = new BluetoothClient();
-		}
-		catch ( BluetoothStateException e )
-		{
-			e.printStackTrace();
-			System.out.println( "Error initializing devices." );
-			return;
-		}
-		
-		try
-		{
-			client.getBTConnection();
-		}
-		catch ( BluetoothStateException e )
-		{
-			System.out.println( "No dice." );
-		}
-		
-		System.out.println( "Done discovery" );
-		
-		String requests[] = {"umanitoba.ca", "google.com"};
-				
-		for ( String request : requests )
-		{
-			System.out.println("Sending request: " + request );
-			
-			byte[] response = null;
-			
-			try
-			{
-				response = client.request( request.getBytes() );
-			}
-			catch ( IOException e )
-			{
-				System.out.println( "Error with request" );
-			}
-			
-			if ( response != null )
-			{
-				int bytes=0;
-				while(response[bytes] != 0){
-					bytes++;
-				}
-				String result = new String(response, 0, bytes);
+public class TestClient 
+{  
+  public static void main( String args[] )
+  {
+    BluetoothClient client;
+    String requests[] = {"http://www.google.com", "This is a very long request, and it surely is bigger than 100 bytes.  I want to test the ability of the BluetoothHost to determine if it is capable of reading in a stream of arbitrary length.  This capability is necessary to send/receive data."};
+    
+    System.out.println( "Starting client test.\nDiscovering devices and services..." );
+    
+    try
+    {
+      client = new BluetoothClient();
+    }
+    catch ( BluetoothStateException e )
+    {
+      e.printStackTrace();
+      System.out.println( "Error initializing devices." );
+      return;
+    }
+    
+    try
+    {
+      client.getBTConnection();
+    }
+    catch ( BluetoothStateException e )
+    {
+      System.out.println( "No dice." );
+    }
 
-				System.out.println("Recieved: " + result);
-			}
-		}
-		
-		
-		System.out.println( "Done testing client." );
-	}
+    System.out.println( "Done discovery" );       
+    
+    for ( String request : requests )
+    {
+      System.out.println("Sending request: " + request );         
+    
+      try
+      {
+        processRequest( client, request );              
+      }
+      catch ( IOException e )
+      {
+        System.out.println( "Error with request" );
+      }     
+    }
+
+    System.out.println( "Done testing client." );
+  }
+  
+  private static void processRequest( BluetoothClient client, String request ) throws IOException
+  {
+    client.connect();
+    client.postRequest( request.getBytes() );
+    
+    while ( client.hasMoreData() )
+    {
+      byte[] response = client.receive();
+      
+      if ( response != null )
+      {
+        System.out.println( new String( response, 0, response.length ) );
+      }
+    }
+    
+    client.disconnect();
+  }
 }
