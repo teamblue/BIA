@@ -104,7 +104,7 @@ public class TestRemoteConnectionHandler extends TestCase
 				performConnectTCP1Test();
 				break;
 			case 1:
-				performConnectHTTP1Test();
+				//performConnectHTTP1Test();
 				break;
 		}
 	}
