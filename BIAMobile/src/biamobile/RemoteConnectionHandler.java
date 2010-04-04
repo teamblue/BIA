@@ -9,8 +9,8 @@ import java.util.Hashtable;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
-
-import com.sun.midp.io.j2me.socket.Protocol;
+import javax.microedition.io.SocketConnection;
+/*import com.sun.midp.io.j2me.socket.Protocol;*/
 
 public class RemoteConnectionHandler
 {
@@ -25,21 +25,23 @@ public class RemoteConnectionHandler
 	public byte[] performConnectTCP(String hostname, int port, byte[] request) throws IOException
 	{
 		//open raw TCP connection
-		Protocol protocol = new Protocol();
-		
+		//Protocol protocol = new Protocol();
+		SocketConnection connection;
 		//note: the first parameter must be in the form "//<hostname>:<port>"
-		protocol.openPrim("//" + hostname + ":" + port, Connector.READ_WRITE, true);
-		
+		//protocol.openPrim("//" + hostname + ":" + port, Connector.READ_WRITE, true);
+		connection = (SocketConnection)Connector.open("socket://"+hostname+":"+port);
 		//send the request
-		OutputStream os = protocol.openOutputStream();
+		//OutputStream os = protocol.openOutputStream();
+		OutputStream os = connection.openOutputStream();
 		os.write(request);
 		
 		//wait for the response (this will block until either a byte is received or a timeout occurs)
-		InputStream is = protocol.openInputStream();
+		//InputStream is = protocol.openInputStream();
+		InputStream is = connection.openInputStream();
 		byte[] response = getResponseFromInputStream(is);
 
-		protocol.close();
-
+		//protocol.close();
+		connection.close();
 		return response;
 	}
 
