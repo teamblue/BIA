@@ -47,6 +47,7 @@ public class RemoteConnectionHandler
 		return response;
 	}
 
+
 	/**
 	 * Performs a connection using the HTTPConnection object.
 	 * @param method One of HttpConnection.GET or HttpConnection.POST (constants)
@@ -73,15 +74,25 @@ public class RemoteConnectionHandler
 
 			client.setRequestProperty(curHeader, curValue);
 		}
+		
+		// opens connection
+		int rc = client.getResponseCode();
+		String rStr = client.getResponseMessage();
+		
+		String responseMessage = "HTTP/1.1 " + rc + " " + rStr + "\r\n";
+		System.out.println("response message = " + rStr);
+		System.out.println("response code = " + rc);
 
 		//opening the input stream has the side effect of causing the request to be sent
 		InputStream is = client.openInputStream();
 
 		byte[] response = getResponseFromInputStream(is);
 		String respStr = new String(response);
+		String tempStr = "";
 
-		// need to pull out header values from http connection since it appears that all data we get from InputStream does not contain the headers
-		//use the HttpConnection.getHeaderField(int n) and HttpConnection.getHeaderFieldKey(int n) methods
+		// need to pull out header values from http connection since it appears that all data 
+		// we get from InputStream does not contain the headers
+		// use the HttpConnection.getHeaderField(int n) and HttpConnection.getHeaderFieldKey(int n) methods
 		// http://java.sun.com/javame/reference/apis/jsr118/
 		// iterate over the value of "n" until we get null as a return value
 		// add all these, plus any data extracted from the InputStream to a byte array to return it
@@ -89,17 +100,42 @@ public class RemoteConnectionHandler
 		int n = 0;
 		String responseHeaderKey = client.getHeaderFieldKey(n);
 		String responseHeaderValue = client.getHeaderField(n);
-		while (responseHeaderKey != null)
-		{
+		
+		//while (responseHeaderKey != null)
+		//{
 			// TODO
 			// keep header values extracted
 			// add to return byte array
-			// so that the browser receives the information it expects (headers, other http info)
+			// so that the browser receives the information it expects (headers, other http info)						
+		//	tempStr += responseHeaderKey + ": " + responseHeaderValue + "\n";
 
+		//	n++;
+		//	responseHeaderKey = client.getHeaderFieldKey(n);
+		//	responseHeaderValue = client.getHeaderField(n);
+		//}
+		
+		while(true)
+		{
+			// keep header values extracted
+			// add to return byte array
+			// so that the browser receives the information it expects (headers, other http info)						
+			if(responseHeaderKey == null && responseHeaderValue == null)
+				break;
+			else if(responseHeaderKey == null)
+				//if key = null then value = HTTP/1.0 ..... i thought anyways
+				tempStr += responseHeaderValue + "\n";
+			else
+				tempStr += responseHeaderKey + ": " + responseHeaderValue + "\n";
+							
 			n++;
 			responseHeaderKey = client.getHeaderFieldKey(n);
 			responseHeaderValue = client.getHeaderField(n);
 		}
+		
+		String responseStr = (responseMessage + tempStr + "\r\n" + respStr);
+		
+		System.out.println(responseStr);
+		response = responseStr.getBytes();
 		
 		client.close();
 

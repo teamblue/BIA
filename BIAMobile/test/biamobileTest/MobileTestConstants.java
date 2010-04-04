@@ -30,7 +30,7 @@ public class MobileTestConstants
 	public static String getFullApplicationTestRequestMobileApp() // the request from mobile app (without http://blah blah)
 	{
 		String message =
-			"GET / HTTP/1.0" + getHTTPNewline() +
+			"GET / HTTP/1.1" + getHTTPNewline() +
 			"Host: " + getTestServerHostName() + getHTTPNewline() +
 			getHTTPNewline();
 		
@@ -64,8 +64,8 @@ public class MobileTestConstants
 	public static String getExpectedResponse()
 	{
 		String response =
-			getHTTPNewline() +
-			"HTTP/1.0 200 OK" + getHTTPNewline() +
+			//getHTTPNewline() +
+			"HTTP/1.1 200 OK" + getHTTPNewline() +
 			getHTTPNewline();
 		
 		return response;
