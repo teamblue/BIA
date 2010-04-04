@@ -17,6 +17,8 @@ public class RequestHTTPView
 	private int remotePort;
 	private Hashtable headerHash;
 	
+	private String httpRequestMethod;
+	
 	private final static String WHITESPACE = " ";
 	private final String HEADEREND = "\r\n\r\n";
 	
@@ -62,6 +64,7 @@ public class RequestHTTPView
 			index = firstLineStr.indexOf(WHITESPACE);
 			
 			getSection = firstLineStr.substring(0, index);
+			httpRequestMethod = getSection;
 			
 			prevIndex = index;
 			
@@ -258,6 +261,11 @@ public class RequestHTTPView
 	public byte[] getRawData()
 	{
 		return this.rawData;
+	}
+	
+	public String getHTTPMethod()
+	{
+		return httpRequestMethod;
 	}
 
 	public int getRemotePort()

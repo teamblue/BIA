@@ -21,7 +21,7 @@ public class MobileTestConstants
 	{
 		String message =
 			"GET http://" + getTestServerHostName() + ":" + getServerPort() + "/ HTTP/1.0" + getHTTPNewline() +
-			"Host: " + getTestServerHostName() + getHTTPNewline() +
+			"Host: " + getTestServerHostName() + ":" + getServerPort() + getHTTPNewline() +
 			getHTTPNewline();
 		
 		return message;
@@ -31,7 +31,7 @@ public class MobileTestConstants
 	{
 		String message =
 			"GET / HTTP/1.1" + getHTTPNewline() +
-			"Host: " + getTestServerHostName() + getHTTPNewline() +
+			"Host: " + getTestServerHostName() + ":" + getServerPort() + getHTTPNewline() +
 			getHTTPNewline();
 		
 		return message;
@@ -41,7 +41,7 @@ public class MobileTestConstants
 	{
 		String message =
 			"GET http://" + getTestServerHostName() + ":" + getServerPort() + "/ HTTP/1.0" + getHTTPNewline() +
-			"Host: " + getTestServerHostName() + getHTTPNewline() +
+			"Host: " + getTestServerHostName() + ":" + getServerPort() + getHTTPNewline() +
 			getHTTPNewline();
 		
 		return message;
@@ -49,13 +49,10 @@ public class MobileTestConstants
 	
 	public static String getHTTPRequestMessage()
 	{
-		//The HttpConnection object uses HTTP 1.1 (not 1.0), and there's nothing we can do to change this,
-		//so we need a separate request message for http (since TestServer compares the actual request with
-		//this message)
 		String message =
 			"GET / HTTP/1.1" + getHTTPNewline() +
-			"Content-Length: 0" + getHTTPNewline() +
 			"Host: " + getTestServerHostName() + ":" + getServerPort() + getHTTPNewline() +
+			"Content-Length: 0" + getHTTPNewline() +
 			getHTTPNewline();
 		
 		return message;

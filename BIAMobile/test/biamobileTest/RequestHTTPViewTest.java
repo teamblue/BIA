@@ -17,7 +17,7 @@ public class RequestHTTPViewTest extends TestCase
 	 */
 	public RequestHTTPViewTest()
 	{
-		super(6, "RequestHTTPViewTest");
+		super(7, "RequestHTTPViewTest");
 	}
 	
 	public void testExtractRemoteHost()
@@ -159,6 +159,20 @@ public class RequestHTTPViewTest extends TestCase
 		assertTrue(expectedValueTwo.equals(extractedHash.get(headerTwo)));
 	} 
 	
+	public void getHTTPMethodTest()
+	{
+		RequestHTTPView httpView;
+		String expectedMethod;
+		
+		httpView = new RequestHTTPView("GET http://localhost HTTP/1.0 \r\nConnection: close\r\nUser-agent: Mozilla\r\n\r\n".getBytes());
+		expectedMethod = "GET";
+		assertEquals(expectedMethod, httpView.getHTTPMethod());
+		
+		httpView = new RequestHTTPView("POST http://localhost HTTP/1.0 \r\nConnection: close\r\nUser-agent: Mozilla\r\n\r\n".getBytes());
+		expectedMethod = "POST";
+		assertEquals(expectedMethod, httpView.getHTTPMethod());
+	} 
+	
 	public void getEntityBodyTest()
 	{
 		RequestHTTPView httpView;
@@ -208,6 +222,10 @@ public class RequestHTTPViewTest extends TestCase
 			
 			case 5:
 				getEntityBodyTest();
+			break;
+			
+			case 6:
+				getHTTPMethodTest();
 			break;
 		}
 	}

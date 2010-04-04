@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mtjMetadata jad="BIAMobile.jad" version="1.1.0.v200908251016">
    <device group="Sun Java(TM) Wireless Toolkit 2.5.2_01 for CLDC" name="DefaultColorPhone"/>
-   <signing projectSpecific="false" signProject="true">
+   <signing projectSpecific="false" signProject="false">
       <alias>mykey</alias>
    </signing>
    <configurations>

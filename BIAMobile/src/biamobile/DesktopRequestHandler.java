@@ -25,7 +25,7 @@ public class DesktopRequestHandler
 		byte[] response = null;
 		
 		//response = rch.performConnectTCP(remoteHost, remotePort, request);
-		response = rch.performConnectHTTP("GET", headerHash, remoteHost, remotePort, request);
+		response = rch.performConnectHTTP(httpView.getHTTPMethod(), headerHash, remoteHost, remotePort, request);
 		
 		return response;
 	}

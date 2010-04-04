@@ -63,7 +63,10 @@ public class TestRemoteConnectionHandler extends TestCase
 		
 		try
 		{
-			response = rch.performConnectHTTP(HttpConnection.GET, new Hashtable(), MobileTestConstants.getTestServerHostName(),
+			Hashtable t = new Hashtable();
+			t.put("Host", MobileTestConstants.getTestServerHostName() + ":" + MobileTestConstants.getServerPort());
+			
+			response = rch.performConnectHTTP(HttpConnection.GET, t, MobileTestConstants.getTestServerHostName(),
 				MobileTestConstants.getServerPort(), MobileTestConstants.getHTTPRequestMessage().getBytes());
 		}
 		
