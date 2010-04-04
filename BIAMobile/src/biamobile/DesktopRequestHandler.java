@@ -1,6 +1,7 @@
 package biamobile;
 
 import java.io.IOException;
+import java.util.Hashtable;
 
 public class DesktopRequestHandler
 {
@@ -20,9 +21,11 @@ public class DesktopRequestHandler
 		
 		String remoteHost = httpView.getRemoteHost();
 		int remotePort = httpView.getRemotePort();
+		Hashtable headerHash = httpView.getHeaderHash();
 		byte[] response = null;
 		
-		response = rch.performConnectTCP(remoteHost, remotePort, request);
+		//response = rch.performConnectTCP(remoteHost, remotePort, request);
+		response = rch.performConnectHTTP("GET", headerHash, remoteHost, remotePort, request);
 		
 		return response;
 	}

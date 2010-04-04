@@ -37,8 +37,8 @@ public class RemoteWebsiteApplicationTest extends MIDlet implements CommandListe
 			
 			byte[] response = null;
 			
-			String request = "GET http://www.google.com/ HTTP/1.1\r\n" +
-								"Host: www.google.com\r\n"+
+			String request = "GET http://www.google.ca/ HTTP/1.1\r\n" +
+								"Host: www.google.ca\r\n"+
 								"User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.9.1.8) Gecko/20100214 Ubuntu/9.10 (karmic) Firefox/3.5.8\r\n"+
 								"\r\n";
 			

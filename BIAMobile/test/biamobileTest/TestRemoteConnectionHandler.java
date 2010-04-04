@@ -101,7 +101,7 @@ public class TestRemoteConnectionHandler extends TestCase
 		switch (testNumber)
 		{
 			case 0:
-				//performConnectTCP1Test();
+				performConnectTCP1Test();
 				break;
 			case 1:
 				performConnectHTTP1Test();
