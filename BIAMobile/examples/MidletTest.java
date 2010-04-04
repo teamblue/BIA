@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Hashtable;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
@@ -23,25 +24,25 @@ public class MidletTest extends MIDlet implements CommandListener
 		mMainForm.setCommandListener(this);
 		
 		
-		String[] remoteHosts = {
-				"http://localhost"};
 //		String[] remoteHosts = {
-//				"http://www.google.ca",
-//				"http://www.umanitoba.ca"};
-			
-		for (int i = 0; i < remoteHosts.length; i++)
-		{
-			try
-			{
-				mMainForm.append("\n\nConnecting to " + remoteHosts[i] + "...");
-				String response = getViaHttpConnection(remoteHosts[i]);
-				mMainForm.append(new StringItem(null, response));
-			}
-			catch (Exception e)
-			{
-				mMainForm.append(e.toString());
-			}
-		}
+//				"http://localhost"};
+////		String[] remoteHosts = {
+////				"http://www.google.ca",
+////				"http://www.umanitoba.ca"};
+//			
+//		for (int i = 0; i < remoteHosts.length; i++)
+//		{
+//			try
+//			{
+//				mMainForm.append("\n\nConnecting to " + remoteHosts[i] + "...");
+//				String response = getViaHttpConnection(remoteHosts[i]);
+//				mMainForm.append(new StringItem(null, response));
+//			}
+//			catch (Exception e)
+//			{
+//				mMainForm.append(e.toString());
+//			}
+//		}
 	}
 
 	/**

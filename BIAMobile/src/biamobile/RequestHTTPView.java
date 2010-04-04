@@ -12,10 +12,13 @@ public class RequestHTTPView
 	private byte[] rawData;
 	
 	private byte[] requestData;
+	private byte[] entityBody;
 	private String remoteHost;
 	private int remotePort;
+	private Hashtable headerHash;
 	
 	private final static String WHITESPACE = " ";
+	private final String HEADEREND = "\r\n\r\n";
 	
 	public RequestHTTPView(byte[] data)
 	{
@@ -25,13 +28,12 @@ public class RequestHTTPView
 		remotePort = 80; // defaults to 80
 		
 		extractRequestData();
+		extractHeaders();
+		extractBody();
 	}
 	
 	// pull out remote host, remote port, etc from request
 	// make a byte array containing the request data to be sent
-	// that is, takes a request like "GET http://www.remotehost.com:888 HTTP/1.0", extracts out the www.remotehost.com
-	//		the port number, stores these values in the class variables
-	//		and stores the stripped command "GET / HTTP/1.0" in the requestData byte array.
 	private void extractRequestData()
 	{
 		String getSection = null;
@@ -147,57 +149,129 @@ public class RequestHTTPView
 		}
 	}
 	
-	// TODO
-	/**
-	 * @return  Returns a hash table containing all the headers (used for the HTTP request) in the form of key:value.
-	 */
-	public Hashtable getHeadersHash()
+	// Retrieve headers from current byte array and enter them into hash table
+	// in the format (header field name, header value)
+	public void extractHeaders()
 	{
-		// note:  this.rawData contains a byte array of all the raw data
+		int currentPosition, nextPosition;
+		boolean headersPresent, headersRemain;
+		String headerField, headerValue;
+		String dataString = "";
 		
-		return null; 
+		headersPresent = headersRemain = true;
+		headerHash = new Hashtable();
+		currentPosition = nextPosition = 0;
+		
+		if(rawData != null)
+		{
+			dataString = new String(rawData);
+			
+			currentPosition = dataString.indexOf('\r') + 1; // sets current position at start of first header
+			nextPosition = dataString.indexOf(HEADEREND); // marks end of header section
+			
+			if(nextPosition <=  currentPosition)
+				headersPresent = false;
+		}
+		else
+		{
+			headersPresent = false;
+			System.out.println("rawData is empty.");
+		}
+		
+		if(headersPresent)
+		{
+			dataString = dataString.substring(currentPosition, nextPosition); // truncate to header section only
+			dataString = dataString + HEADEREND; // Add CRLF to end to help with parsing, as it was stripped off
+			
+			System.out.println(dataString);
+			
+			currentPosition = 1; // Skip over linefeed still at beginning of string
+			
+			while(headersRemain)
+			{
+				// Get header field name
+				nextPosition = dataString.indexOf(':', currentPosition);
+				headerField = dataString.substring(currentPosition, nextPosition);
+				System.out.println("Header: *" + headerField + "*");
+				
+				// Get header value
+				currentPosition = nextPosition + 2; // skip past whitespace
+				nextPosition = dataString.indexOf('\r', currentPosition);
+				
+				headerValue = dataString.substring(currentPosition, nextPosition);	
+				System.out.println("Value: *" + headerValue + "*");
+				
+				// Insert into hash table
+				headerHash.put(headerField, headerValue);
+				
+				// Skip to next header line
+				currentPosition = nextPosition + 2; // Add two to skip past line feed
+				System.out.println("Entry added into hash table.");
+				
+				if(currentPosition >= (dataString.length() - HEADEREND.length()))
+					headersRemain = false;
+			}
+		}
 	}
 	
-	// TODO
-	/**
-	 * @return  A byte array containing all the data after the headers.  That is all the data after the /r/n/r/n in the HTTP request.
-	 * 				This is used for the HTTP connection.
-	 */
-	public byte[] getDataAfterHeaders()
+	public void extractBody()
 	{
-		return null;
+		int currentPosition, nextPosition;
+		boolean bodyPresent;
+		String dataString = "";
+		
+		bodyPresent = true;
+		
+		if(rawData != null)
+			dataString = new String(rawData);
+		else
+			bodyPresent = false;
+		
+		if(bodyPresent)
+		{
+			// Truncate dataString to only contain request body
+			currentPosition = dataString.indexOf(HEADEREND) + HEADEREND.length(); // first good byte of request body data
+			nextPosition = dataString.length(); // last byte of request
+			
+			if(currentPosition < nextPosition)
+			{
+				dataString = dataString.substring(currentPosition, nextPosition);
+				
+				System.out.println("Entity body: " + dataString);
+				
+				entityBody = dataString.getBytes();
+		
+			}
+		}
 	}
 	
-	/**
-	 * @return  The remote host contained in the "GET http://remotehost.com" section of the passed byte array.
-	 */
 	public String getRemoteHost()
 	{
 		return remoteHost;
 	}
 	
-	/**
-	 * @return  The request data (that is, the byte array, but with the "GET http://remotehost.com" stripped down to "GET /"
-	 * 	so it can be used to send out to a web server as a request)
-	 */
 	public byte[] getRequestData()
 	{
 		return requestData;
 	}
 	
-	/**
-	 * @return  The raw, untouched byte array.
-	 */
 	public byte[] getRawData()
 	{
 		return this.rawData;
 	}
 
-	/**
-	 * @return  The remote port, as in "GET http://remotehost.com:88"
-	 */
 	public int getRemotePort()
 	{
 		return remotePort;
+	}
+	
+	public Hashtable getHeaderHash()
+	{
+		return headerHash;
+	}
+	
+	public byte[] getEntityBody()
+	{
+		return entityBody;
 	}
 }

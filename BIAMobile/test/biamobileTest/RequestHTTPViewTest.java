@@ -1,12 +1,13 @@
 package biamobileTest;
 
+import java.util.Hashtable;
+
 import biamobile.DesktopRequestHandler;
 import biamobile.RequestHTTPView;
 import jmunit.framework.cldc11.TestCase;
 
 public class RequestHTTPViewTest extends TestCase
 {
-
 	/**
 	 * The default constructor. It just transmits the necessary informations to
 	 * the superclass.
@@ -16,7 +17,7 @@ public class RequestHTTPViewTest extends TestCase
 	 */
 	public RequestHTTPViewTest()
 	{
-		super(4, "RequestHTTPViewTest");
+		super(6, "RequestHTTPViewTest");
 	}
 	
 	public void testExtractRemoteHost()
@@ -141,6 +142,36 @@ public class RequestHTTPViewTest extends TestCase
 		assertEquals(expectedPort, httpView.getRemotePort());
 	}
 
+	public void getHeadersTest()
+	{
+		RequestHTTPView httpView;
+		Hashtable extractedHash;
+		
+		String headerOne = "Connection";
+		String headerTwo = "User-agent";
+		String expectedValueOne = "close";
+		String expectedValueTwo = "Mozilla";
+		
+		httpView = new RequestHTTPView("GET http://localhost HTTP/1.0 \r\nConnection: close\r\nUser-agent: Mozilla\r\n\r\n".getBytes());
+		extractedHash = httpView.getHeaderHash();
+		
+		assertTrue(expectedValueOne.equals(extractedHash.get(headerOne)));
+		assertTrue(expectedValueTwo.equals(extractedHash.get(headerTwo)));
+	} 
+	
+	public void getEntityBodyTest()
+	{
+		RequestHTTPView httpView;
+		byte[] entityBody;
+		
+		String expectedBody = "There would normally be data here.";
+		
+		httpView = new RequestHTTPView("GET http://localhost HTTP/1.0 \r\nConnection: close\r\nUser-agent: Mozilla\r\n\r\nThere would normally be data here.".getBytes());
+		entityBody = httpView.getEntityBody();
+		
+		assertTrue(Utils.byteArrayEqual(expectedBody.getBytes(), entityBody));
+	}
+
 	/**
 	 * This method stores all the test methods invocation. The developer must
 	 * implement this method with a switch-case. The cases must start from 0 and
@@ -169,6 +200,14 @@ public class RequestHTTPViewTest extends TestCase
 			
 			case 3:
 				getRemotePortTest();
+			break;
+			
+			case 4:
+				getHeadersTest();
+			break;
+			
+			case 5:
+				getEntityBodyTest();
 			break;
 		}
 	}
