@@ -34,11 +34,13 @@ public class RemoteConnectionHandler
 		//OutputStream os = protocol.openOutputStream();
 		OutputStream os = connection.openOutputStream();
 		os.write(request);
+		os.close();
 		
 		//wait for the response (this will block until either a byte is received or a timeout occurs)
 		//InputStream is = protocol.openInputStream();
 		InputStream is = connection.openInputStream();
 		byte[] response = getResponseFromInputStream(is);
+		is.close();
 
 		//protocol.close();
 		connection.close();
