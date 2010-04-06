@@ -1,8 +1,8 @@
 package bluetooth;
 
-//import java.util.Collection;
-//import java.util.HashMap;
-/*
+import java.util.Enumeration;
+import java.util.Hashtable;
+
 import javax.bluetooth.BluetoothStateException;
 import javax.bluetooth.DeviceClass;
 import javax.bluetooth.DiscoveryAgent;
@@ -14,8 +14,8 @@ import javax.bluetooth.UUID;
 
 public class BluetoothDevices implements DiscoveryListener
 {
-	private HashMap<String, BluetoothDevice> devices = new HashMap<String, BluetoothDevice>();
-	private HashMap<String,String> services = new HashMap<String, String>();
+	private Hashtable devices = new Hashtable();
+	private Hashtable services = new Hashtable();
 	private static Object lock = new Object();
 	
 	private DiscoveryAgent dAgent;
@@ -25,17 +25,17 @@ public class BluetoothDevices implements DiscoveryListener
 		dAgent = LocalDevice.getLocalDevice().getDiscoveryAgent();
 	}
 	
-	public HashMap<String, BluetoothDevice> getDevices()
+	public Hashtable getDevices()
 	{
 		return devices;
 	}
 	
-	public Collection<BluetoothDevice> getDevicesCollection()
+	public Enumeration getDevicesCollection()
 	{
-		return devices.values();
+		return devices.elements();
 	}
 	
-	public HashMap<String, String> getServices()
+	public Hashtable getServices()
 	{
 		return services;
 	}
@@ -72,10 +72,11 @@ public class BluetoothDevices implements DiscoveryListener
 		UUID[] uuidSet = new UUID[1];
 		uuidSet[0] = new UUID(serviceUUID, false);
 		
-		Collection<BluetoothDevice> devices = this.devices.values();
+		Enumeration devices = this.devices.elements();
 		
-		for ( BluetoothDevice device : devices )
+		for ( ;devices.hasMoreElements(); )
 		{
+                        BluetoothDevice device = (BluetoothDevice)devices.nextElement();
 			dAgent.searchServices( null, uuidSet, device.getRemoteDevice(), this );
 			
 			try 
@@ -133,7 +134,7 @@ public class BluetoothDevices implements DiscoveryListener
         		// Add the service to the HashMap
         		services.put(btAddr, servs);
         		// Update the BluetoothDevice with its service
-        		(devices.get( btAddr )).setServices( servs );
+        		((BluetoothDevice)(devices.get( btAddr ))).setServices( servs );
         	}
         }
         synchronized ( lock )

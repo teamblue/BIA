@@ -18,19 +18,17 @@ import btcommon.Constants;
 
 public class BluetoothHost
 {
-  private LocalDevice localDevice;  
-  private BluetoothRequest btRequest;
+  private LocalDevice localDevice;
 
-  public BluetoothHost( BluetoothRequest btRequest ) throws BluetoothStateException
+  public BluetoothHost( ) throws BluetoothStateException
   {
-    initHost( btRequest );    
+    initHost( );    
   }
   
-  private void initHost( BluetoothRequest btRequest ) throws BluetoothStateException
+  private void initHost(  ) throws BluetoothStateException
   {
     localDevice = LocalDevice.getLocalDevice();
     localDevice.setDiscoverable(DiscoveryAgent.GIAC);    
-    this.btRequest = btRequest;
     
     System.out.println( "BluetoothHost -  Created at addess " + localDevice.getBluetoothAddress() );
   }
@@ -38,8 +36,8 @@ public class BluetoothHost
   public void acceptConnections()
   {
     // service url
+    //String serviceURL = "btspp://" + localDevice.getBluetoothAddress() + ":" + Constants.SERVICE_UUID + ";name=tether";
     String serviceURL = "btspp://localhost:" + Constants.SERVICE_UUID + ";name=tether";
-  
     try 
     {
       // create a server connection
@@ -64,8 +62,11 @@ public class BluetoothHost
 
   class HandleConnection extends Thread
   {
-    public HandleConnection( StreamConnection connection )
-    {           
+    public HandleConnection( StreamConnection connection ) throws IOException
+    {
+      if (connection == null) {
+          throw new IOException("HandleConnection finds connection to be null");
+      }
       try 
       {
         String        request = getRequest( connection );
@@ -80,11 +81,15 @@ public class BluetoothHost
       catch ( IOException e )
       {
         System.out.println( "BluetoothHost - exception: " + e.getMessage() );
+        throw new IOException("BluetoothHost - exception: " + e.getMessage());
       }
     }
     
     private String getRequest( StreamConnection connection ) throws IOException
     {
+      if (connection == null) {
+          throw new IOException("getRequest finds connection to be null");
+      }
       InputStream   is        = connection.openInputStream();
       byte          buffer[]  = new byte[ Constants.TRANSFER_MAX_BYTES ];            
       int           readBytes = 0;
@@ -97,7 +102,7 @@ public class BluetoothHost
         String input;
         
         readBytes = is.read( buffer );
-        input = new String( btRequest.dataRequested( buffer, readBytes ), 0, readBytes );
+        input = new String( buffer, 0, readBytes);
         request.append( input );
         done = Constants.containsEndingCode( input );
         
@@ -120,14 +125,15 @@ public class BluetoothHost
       biamobile.DesktopRequestHandler handler = new biamobile.DesktopRequestHandler(); 
       //RequestHandler handler = new RequestHandler();
       //byte[] data = handler.fetch( request );
-      byte[] data = null;
+      byte[] data = (new String("getResponse() is sending a null")).getBytes();
       // JUST TEMPORARILY CATCH EXCEPTION, THIS WILL CHANGE!
       try {
     	  data = handler.sendRequest( request.getBytes() );
+          //data = (new String("This is a response!")).getBytes();
       } catch (Exception e) {
-    	  // do nothing
+    	  data = (e.toString()).getBytes();
       }
-      return data != null ? data : ( new String() ).getBytes();           
+      return data;           
     }
   }
 }

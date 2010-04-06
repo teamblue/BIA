@@ -6,7 +6,7 @@ import javax.bluetooth.BluetoothStateException;
 // A wrapper for the BluetoothDevice(s)
 public class Bluetooth
 {
-	/*private BluetoothDevices devices;
+	private BluetoothDevices devices;
 	private BluetoothDevice device;
 	
 	public Bluetooth() throws BluetoothStateException
@@ -26,7 +26,7 @@ public class Bluetooth
 			return false;
 		}
 		
-		device = devices.connect();
+		//device = devices.connect();
 		
 		return device != null;
 	}
@@ -65,9 +65,9 @@ public class Bluetooth
 		return device.receive();
 	}
 	*/
-	/*
+	
 	public byte[] request( byte[] data ) throws IOException, BluetoothStateException
 	{
 		return device.request( data );
-	}*/
+	}
 }

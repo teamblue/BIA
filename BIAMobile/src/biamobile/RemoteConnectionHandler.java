@@ -58,9 +58,9 @@ public class RemoteConnectionHandler
 	 * @return
 	 * @throws IOException
 	 */
-	public byte[] performConnectHTTP(String method, Hashtable headerHash, String hostname, int port, byte[] request) throws IOException
+	public byte[] performConnectHTTP(String method, Hashtable headerHash, String hostname, String path, int port, byte[] request) throws IOException
 	{
-		HttpConnection client = (HttpConnection) Connector.open("http://" + hostname + ":" + port);
+		HttpConnection client = (HttpConnection) Connector.open("http://" + hostname + ":" + port + path);
 		client.setRequestMethod(method);
 
 		Enumeration keyEnum = headerHash.keys();
