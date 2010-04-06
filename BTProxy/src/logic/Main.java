@@ -17,7 +17,8 @@ public class Main {
 	public static void main(String[] args) {
 		SessionDetails.addEvent("Program started");
 		run();
-		SessionDetails.addEvent("Program Actually Ended");
+		SessionDetails.addEvent("Program ended");
+		System.exit(0); //proxy is running in a separate thread (this exiting could maybe be cleaner)
 	}
 	
 	public static void run(){

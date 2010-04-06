@@ -31,8 +31,18 @@ public class DebugInfo {
 
 	private String[] events = null;
 
+	private static boolean isRunning;
+	
+	/* not a singleton because we may want to destroy and then recreate
+	 * multiple instances of this class during the same program execution */
+	public static void run() {
+		if (!isRunning)
+			new DebugInfo();
+	}	
+	
 	//Constructor
-	public DebugInfo() {
+	private DebugInfo() {
+		isRunning = true;
 		String[] events = SessionDetails.getEvents();
 		display = Display.getDefault();
 		shell = new Shell(display);
@@ -169,5 +179,6 @@ public class DebugInfo {
 	private void doExit() {
 		lstList = null; // important
 		shell.dispose();
+		isRunning = false;
 	}
 }

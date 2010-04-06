@@ -17,7 +17,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -45,7 +47,6 @@ public class Status {
 	private Label lblDataTotalNum;
 	private Label lblDataTotalTitle;
 	private Label lblUnits;
-
 	private Text txtCostPerKB;
 
 	private Label lblNotifyTitle;
@@ -58,10 +59,21 @@ public class Status {
 	private Text txtNotifyCost;
 	private Text txtNotifyKB;
 
-	private final Font SUBTITLE = new Font(display, "Arial", 9, SWT.BOLD);
 	private DecimalFormat numberFormat;
 
-	public Status() {
+	private static boolean isRunning;
+	
+	private final Font SUBTITLE = new Font(display, "Arial", 9, SWT.BOLD);
+
+	/* not a singleton because we may want to destroy and then recreate
+	 * multiple instances of this class during the same program execution */
+	public static void run() {
+		if (!isRunning)
+			new Status();
+	}
+	
+	private Status() {
+		isRunning = true;
 		// Setup the number format.
 		numberFormat = new DecimalFormat("0.00");
 		numberFormat.setNegativePrefix("");
@@ -212,7 +224,7 @@ public class Status {
 		lblCostPerKB.setText("Cost per KB: $");
 
 		// txtCostPerKB start
-		txtCostPerKB = new Text(cmpCost, SWT.NONE);
+		txtCostPerKB = new Text(cmpCost, SWT.BORDER);
 		txtCostPerKB.setTextLimit(6);
 		txtCostPerKB.setLayoutData(grdCost);
 
@@ -273,7 +285,7 @@ public class Status {
 		lblNotifyCost2.setText(String.valueOf(GREATER_EQUAL_THAN) + " $");
 
 		// txtNotifyCost start
-		txtNotifyCost = new Text(cmpNotify, SWT.NONE);
+		txtNotifyCost = new Text(cmpNotify, SWT.BORDER);
 		txtNotifyCost.setTextLimit(6);
 		txtNotifyCost.setLayoutData(grdAlert2);
 
@@ -288,7 +300,7 @@ public class Status {
 		lblNotifyKB2.setText(String.valueOf(GREATER_EQUAL_THAN));
 
 		// txtNotifyKB start
-		txtNotifyKB = new Text(cmpNotify, SWT.NONE);
+		txtNotifyKB = new Text(cmpNotify, SWT.BORDER);
 		txtNotifyKB.setTextLimit(6);
 		txtNotifyKB.setLayoutData(grdAlert);
 
@@ -302,6 +314,13 @@ public class Status {
 	}
 
 	private void addListeners() {
+		// 'X' button listener
+		shell.addListener(SWT.Close, new Listener() {
+			public void handleEvent(Event e) {
+				isRunning = false;
+			}
+		});		
+		
 		// cboUnits selection listener
 		cboUnits.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {

@@ -63,14 +63,14 @@ public class General {
 			// menu's status item
 			statusItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event event) {
-					new Status();
+					Status.run();
 				}
 			});
 
 			// menu's debug item
 			debugItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event event) {
-					new DebugInfo();
+					DebugInfo.run();
 				}
 			});
 
@@ -93,7 +93,7 @@ public class General {
 			// icon double-click
 			trayItem.addListener(SWT.DefaultSelection, new Listener() {
 				public void handleEvent(Event event) {
-					new Status();
+					Status.run();
 				}
 			});
 
