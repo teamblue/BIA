@@ -13,8 +13,6 @@ public class Request implements btserver.BluetoothRequest
 
   public byte[] dataRequested(byte[] data, int bytes)
   {
-    System.out.println( "Data requested" );
-    
     return data;
   }
 }

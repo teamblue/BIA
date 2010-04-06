@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.util.Vector;
 import javax.swing.JOptionPane;
+
+import btclient.SimpleBluetoothClient;
 import logic.HTTPHeader;
 import modal.SessionDetails;
 
@@ -17,7 +19,7 @@ import modal.SessionDetails;
 public class OutboundTraffic extends Thread {
 	private Socket browserSession;
 	private Vector<Socket> serverSessions = new Vector<Socket>();
-
+    
 	public OutboundTraffic(Socket browserSession) {
 		this.browserSession = browserSession;
 	}
@@ -54,7 +56,7 @@ public class OutboundTraffic extends Thread {
 					message = new String(buffer);
 				}
 				
-				String host = new HTTPHeader(message).getHost();
+				//String host = new HTTPHeader(message).getHost();
 
 				// Look for an existing socket to the destination
 				// server THAT IS OWNED BY THIS BROWSER SOCKET.
@@ -62,14 +64,14 @@ public class OutboundTraffic extends Thread {
 				// multiple browser sockets, one browser socket's request
 				// may affect what this destination server socket returns
 				// to another unrelated browser socket!
-				Socket existingServerSession = null;
+				/*Socket existingServerSession = null;
 				for (Socket serverSession : serverSessions) {
 					if (serverSession.getInetAddress().getHostName().equals(
 							host)) {
 						existingServerSession = serverSession;
 						break;
 					}
-				}
+				}*/
 
 				// TODO: This block doesn't seem to get used, even though I
 				// thought it would. Do we really not need to check if a
@@ -79,7 +81,7 @@ public class OutboundTraffic extends Thread {
 				// be caused if that input stream that returns information to
 				// us is closed when the socket needs to send data to that
 				// server again?
-				if (existingServerSession != null
+				/*if (existingServerSession != null
 						&& existingServerSession.isClosed()) {
 					JOptionPane.showMessageDialog(null,
 							"Found closed connection!");
@@ -95,17 +97,31 @@ public class OutboundTraffic extends Thread {
 
 					// Listen to what the new server socket has to say
 					// in reply to what we'll soon send it.
-					InboundTraffic inboundTraffic = new InboundTraffic(
-							browserSession, existingServerSession
-									.getInputStream());
-					inboundTraffic.start();
+					//InboundTraffic inboundTraffic = new InboundTraffic(
+						//	browserSession, existingServerSession
+							//		.getInputStream());
+					//inboundTraffic.start();
 				} else {
 					SessionDetails.addEvent("Old Host: " + host);
 				}
-
+*/
 				// Send outbound traffic to the destination socket.
-				existingServerSession.getOutputStream().write(buffer, 0,
-						bufferLength);
+				
+				//existingServerSession.getOutputStream().write(buffer, 0,
+					//	bufferLength);
+				
+				
+				//SimpleBluetoothClient client = new SimpleBluetoothClient();
+				System.out.println("omg");
+				SimpleBluetoothClient client = new SimpleBluetoothClient();
+				//browserSession.getOutputStream().write(
+				String a = client.write(new String(buffer));
+				System.out.println("start");
+				System.out.println(a);
+				System.out.println("end");
+				
+				browserSession.getOutputStream().write(a.getBytes());;
+				// browserSession.getOutputStream().write(simpleBTClient.write(buffer));
 				SessionDetails.addBytesOut(bufferLength);
 			}
 

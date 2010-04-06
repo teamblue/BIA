@@ -35,7 +35,6 @@ public class SimpleBluetoothClient
 		}
 		try
 	    {
-			System.out.println("asdasd");
 			result = processRequest( request );              
 	    }
 	    catch ( IOException e )

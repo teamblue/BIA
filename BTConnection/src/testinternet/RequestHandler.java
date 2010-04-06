@@ -21,7 +21,7 @@ public class RequestHandler
   {
     byte[] data = null;
     
-    try
+    /*try
     {
       URL             url = new URL( address );
       BufferedReader  bufferedReader = new BufferedReader( new InputStreamReader( url.openStream() ) );
@@ -37,6 +37,7 @@ public class RequestHandler
     }
     catch ( MalformedURLException e )
     {
+      System.out.println( "Status" );
       System.out.println( "Exception: " + e.getMessage() );
     } 
     catch ( IOException e )
@@ -45,5 +46,7 @@ public class RequestHandler
     }
     
     return data;
+    */
+    return "OMG WTF".getBytes();
   }
 }
