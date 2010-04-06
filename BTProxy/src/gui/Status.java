@@ -74,9 +74,8 @@ public class Status {
 		shell.open();
 
 		while (!shell.isDisposed()) {
-			updateWindow();
-			
 			if (!display.readAndDispatch()) {
+				updateWindow();
 				display.sleep();
 			}
 		}
