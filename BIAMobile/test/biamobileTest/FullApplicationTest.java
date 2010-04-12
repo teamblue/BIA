@@ -7,6 +7,11 @@ import com.sun.midp.io.Util;
 import biamobile.DesktopRequestHandler;
 import jmunit.framework.cldc11.TestCase;
 
+/**
+ * Tests out the Full application (sending a request to DesktopRequestHandler).  Must launch BIATestSever before launching this test.
+ * @author aaron
+ *
+ */
 public class FullApplicationTest extends TestCase
 {
 

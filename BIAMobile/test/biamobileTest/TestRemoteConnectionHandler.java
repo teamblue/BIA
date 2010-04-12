@@ -8,7 +8,11 @@ import javax.microedition.io.HttpConnection;
 import jmunit.framework.cldc11.TestCase;
 import biamobile.RemoteConnectionHandler;
 
-// to run these tests, must run testServer.TestServer first
+/**
+ * Tests out the RemoteConnectionHandler class, to make sure requests are properly sent/received.  Must launch BIATestServer before launching this test.
+ * @author aaron
+ *
+ */
 public class TestRemoteConnectionHandler extends TestCase
 {
 	
