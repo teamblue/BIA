@@ -27,7 +27,7 @@ public class RemoteWebsiteApplicationTest extends MIDlet implements CommandListe
 		mMainForm.setCommandListener(this);
 		
 //		System.out.println("hello, sysout println, constructor");
-//		mMainForm.append("hello, form.append, constructor\n");
+//		mMainForm.append("hell, form.append, constructor\n");
 //		mMainForm.append("before code\n");
 //		testRequestResponse();
 //		
