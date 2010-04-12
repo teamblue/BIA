@@ -1,3 +1,4 @@
+package examplePackage;
 import java.io.*;
 
 import javax.microedition.io.Connector;

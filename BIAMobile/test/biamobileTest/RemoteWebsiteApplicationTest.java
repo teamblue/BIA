@@ -1,3 +1,4 @@
+package biamobileTest;
 import java.io.IOException;
 
 import javax.microedition.lcdui.Command;
@@ -8,9 +9,13 @@ import javax.microedition.lcdui.Form;
 import javax.microedition.midlet.MIDlet;
 
 import biamobile.DesktopRequestHandler;
-import biamobileTest.MobileTestConstants;
 
-
+/**
+ * Performs a full test of the application by attempting to connection to www.google.ca.  Does not compare the 
+ * 	result with anything (as google.ca could change), but prints out html file.
+ * @author aaron
+ *
+ */
 public class RemoteWebsiteApplicationTest extends MIDlet implements CommandListener
 {
 	private Form mMainForm;
