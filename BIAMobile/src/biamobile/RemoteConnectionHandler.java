@@ -51,11 +51,11 @@ public class RemoteConnectionHandler
 	/**
 	 * Performs a connection using the HTTPConnection object.
 	 * @param method One of HttpConnection.GET or HttpConnection.POST (constants)
-	 * @param headerHash
-	 * @param hostname
-	 * @param port
-	 * @param request
-	 * @return
+	 * @param headerHash  A Hashtable of header "key":"value" pairs for the HTTP request.
+	 * @param hostname  The hostname to connect to.
+	 * @param port  The port the remote host is on.
+	 * @param request  The byte array containing any extra information for the request (after the headers).
+	 * @return  A byte array containing the response.
 	 * @throws IOException
 	 */
 	public byte[] performConnectHTTP(String method, Hashtable headerHash, String hostname, String path, int port, byte[] request) throws IOException
@@ -129,6 +129,12 @@ public class RemoteConnectionHandler
 		return response; // should return all data, including headers in a byte array
 	}
 	
+	/**
+	 * Pulls out a response from an input stream into a byte array.
+	 * @param is  The input stream to use.
+	 * @return  The response, as a byte array.
+	 * @throws IOException
+	 */
 	private byte[] getResponseFromInputStream(InputStream is) throws IOException
 	{
 		ByteArrayOutputStream boStream = new ByteArrayOutputStream();

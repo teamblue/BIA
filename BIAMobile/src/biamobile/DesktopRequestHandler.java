@@ -24,7 +24,7 @@ public class DesktopRequestHandler
 		RequestHTTPView httpView = new RequestHTTPView(request);
 
 		String remoteHost = httpView.getRemoteHost();
-                String extractedHostSection = httpView.getExtractedHostSection();
+                String extractedHostSection = httpView.getExtractedPathSection();
 		int remotePort = httpView.getRemotePort();
 		Hashtable headerHash = httpView.getHeaderHash();
 		byte[] response = (new String("Null comes from sendRequest()")).getBytes();

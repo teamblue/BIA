@@ -23,6 +23,10 @@ public class RequestHTTPView
 	private final static String WHITESPACE = " ";
 	private final String HEADEREND = "\r\n\r\n";
 
+	/**
+	 * Builds a new RequestHTTPView around the passed byte array containing the request data.
+	 * @param data  The request data.
+	 */
 	public RequestHTTPView(byte[] data)
 	{
 		this.rawData = data;
@@ -153,9 +157,11 @@ public class RequestHTTPView
 		}
 	}
 
-	// Retrieve headers from current byte array and enter them into hash table
-	// in the format (header field name, header value)
-	public void extractHeaders()
+	/**
+	 * Retrieve headers from current byte array and enter them into hash table
+	 * in the format "header key":"header value"
+	 */
+	private void extractHeaders()
 	{
 		int currentPosition, nextPosition;
 		boolean headersPresent, headersRemain;
@@ -218,7 +224,10 @@ public class RequestHTTPView
 		}
 	}
 
-	public void extractBody()
+	/**
+	 * Pulls out the body of the HTTP request.
+	 */
+	private void extractBody()
 	{
 		int currentPosition, nextPosition;
 		boolean bodyPresent;
@@ -249,41 +258,66 @@ public class RequestHTTPView
 		}
 	}
 
+	/**
+	 * @return  The remote host contained in this request.
+	 */
 	public String getRemoteHost()
 	{
 		return remoteHost;
 	}
 
+	/**
+	 * @return  The data of this request, after the header values (after the \r\n\r\n).
+	 */
 	public byte[] getRequestData()
 	{
 		return requestData;
 	}
 
+	/**
+	 * @return  The raw data of the request (the same byte array as was wrapped around by this view).
+	 */
 	public byte[] getRawData()
 	{
 		return this.rawData;
 	}
 
+	/**
+	 * @return  The "method" of this HTTP request (GET, POST, etc).
+	 */
 	public String getHTTPMethod()
 	{
 		return httpRequestMethod;
 	}
 
-        public String getExtractedHostSection()
-        {
-                return extractedHostSection;
-        }
+	/**
+	 * 
+	 * @return  The "path" of the request, that is /page/index.html in GET http://www.google.ca/page/index.html.
+	 */
+    public String getExtractedPathSection()
+    {
+            return extractedHostSection;
+    }
 
+    /**
+     * @return  The remote port for the server.
+     */
 	public int getRemotePort()
 	{
 		return remotePort;
 	}
 
+	/**
+	 * @return  The header values, as a hash table.
+	 */
 	public Hashtable getHeaderHash()
 	{
 		return headerHash;
 	}
 
+	/**
+	 * @return The body of the HTTP request.
+	 */
 	public byte[] getEntityBody()
 	{
 		return entityBody;

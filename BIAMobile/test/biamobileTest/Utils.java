@@ -9,6 +9,13 @@ package biamobileTest;
 public class Utils
 {
 	// tests if two byte arrays are equal
+	/**
+	 * Tests if two byte arrays are equal
+	 * @param  a
+	 * @param  b
+	 * 
+	 * @return True if equal, false otherwise.
+	 */
 	public static boolean byteArrayEqual(byte[] a, byte[] b)
 	{
 		if (a == b) return true;
