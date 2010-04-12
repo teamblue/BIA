@@ -12,6 +12,10 @@ import javax.microedition.io.HttpConnection;
 import javax.microedition.io.SocketConnection;
 /*import com.sun.midp.io.j2me.socket.Protocol;*/
 
+/**
+ * Used to perform the connection to a remote website.  Contains methods for doing a raw tcp connection, as well as an HTTP connection.
+ * 	The raw TCP connection does not work on the mobile device due to signing issues, so we use the http connection method instead.
+ */
 public class RemoteConnectionHandler
 {
 	/**
