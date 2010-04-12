@@ -1,5 +1,10 @@
 package biamobileTest;
 
+/**
+ * Constants used by the test code.
+ * @author aaron
+ *
+ */
 public class MobileTestConstants
 {
 	public static String getHTTPNewline()

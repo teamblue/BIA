@@ -9,6 +9,11 @@ import javax.microedition.midlet.*;
 import javax.microedition.lcdui.*;
 
 /**
+ * Main Mobile Application code.
+ * Responsible for establishing a connection to the bluetooth device on the desktop, and forwarding requests to
+ * 	DesktopRequestHandler.sendRequest().  This method consists of a mixture of code from the Mobile Application team,
+ * 	and the bluetooth handler team.
+ * 
  * @author Stefan
  */
 public class BIAMain extends MIDlet implements CommandListener {

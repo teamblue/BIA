@@ -1,5 +1,11 @@
 package biamobileTest;
 
+/**
+ * Utility method.  Need to implement this as JMUnit did not support assertEquals(byte arrays).
+ * 	(Would simply compare the values of the pointers instead of the arrays).
+ * @author aaron
+ *
+ */
 public class Utils
 {
 	// tests if two byte arrays are equal

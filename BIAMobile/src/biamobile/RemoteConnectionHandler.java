@@ -101,19 +101,6 @@ public class RemoteConnectionHandler
 		String responseHeaderKey = client.getHeaderFieldKey(n);
 		String responseHeaderValue = client.getHeaderField(n);
 		
-		//while (responseHeaderKey != null)
-		//{
-			// TODO
-			// keep header values extracted
-			// add to return byte array
-			// so that the browser receives the information it expects (headers, other http info)						
-		//	tempStr += responseHeaderKey + ": " + responseHeaderValue + "\n";
-
-		//	n++;
-		//	responseHeaderKey = client.getHeaderFieldKey(n);
-		//	responseHeaderValue = client.getHeaderField(n);
-		//}
-		
 		while(true)
 		{
 			// keep header values extracted

@@ -4,7 +4,7 @@ import java.util.Hashtable;
 
 /**
  * Provides a "View" over a byte array to interpret it as HTTP data.
- * @author aaron
+ * Used to wrap around the received request array so we can pull out relevant HTTP data.
  *
  */
 public class RequestHTTPView

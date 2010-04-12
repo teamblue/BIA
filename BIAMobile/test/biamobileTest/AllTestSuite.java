@@ -2,6 +2,11 @@ package biamobileTest;
 
 import jmunit.framework.cldc11.TestSuite;
 
+/**
+ * Suite of all tests for Mobile Application.  In order to run this, you must first run the BIATestServer (the ApplicationTest relies on this server to run).
+ * @author aaron
+ *
+ */
 public class AllTestSuite extends TestSuite
 {
 

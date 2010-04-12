@@ -6,6 +6,11 @@ import biamobile.DesktopRequestHandler;
 import biamobile.RequestHTTPView;
 import jmunit.framework.cldc11.TestCase;
 
+/**
+ * Tests out the RequestHTTPView code.
+ * @author aaron
+ *
+ */
 public class RequestHTTPViewTest extends TestCase
 {
 	/**
